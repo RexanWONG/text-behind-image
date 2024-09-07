@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, Sora } from 'next/font/google'
 import "./globals.css";
+import SupabaseProvider from "@/providers/SupabaseProvider";
+import UserProvider from "@/providers/UserProvider";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,9 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div>
-          {children}
-        </div>
+        <SupabaseProvider>
+            <UserProvider>
+              <div>
+                {children}
+              </div>
+            </UserProvider>
+        </SupabaseProvider>
+        
       </body>
     </html>
   );
