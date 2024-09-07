@@ -1,10 +1,12 @@
 'use client'
 
-import Image from 'next/image';
 import React from 'react';
-import { removeBackground } from "@imgly/background-removal"; // Updated import
+import { removeBackground } from "@imgly/background-removal"; 
+import Image from 'next/image';
+import Navbar from '@/components/navbar';
+import { Separator } from '@/components/ui/separator';
 
-const Page = () => {
+const page = () => {
     const [removedBackgroundImage, setRemovedBackgroundImage] = React.useState<string>('');
     const [isRunning, setIsRunning] = React.useState<boolean>(false);
     const [caption, setCaption] = React.useState<string>('Click to remove background');
@@ -36,8 +38,10 @@ const Page = () => {
     };
 
     return (
-        <div>
-            <Image 
+        <div className='flex flex-col min-h-screen'>
+            <Navbar />
+            <Separator />
+            {/* <Image 
                 src='https://images.unsplash.com/photo-1724454920878-a4cba430db4c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxMjN8fHxlbnwwfHx8fHw%3D' 
                 alt='Original Image'
                 width={200}
@@ -57,9 +61,9 @@ const Page = () => {
                 />
             )}
 
-            <p>{caption}</p>
+            <p>{caption}</p> */}
         </div>
     );
 }
 
-export default Page;
+export default page;
