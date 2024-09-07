@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Sora } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
             <UserProvider>
               <div>
                 {children}
+                <Toaster />
               </div>
             </UserProvider>
         </SupabaseProvider>

@@ -11,9 +11,11 @@
   "dependencies": {
     "@imgly/background-removal": "^1.5.5",
     "@imgly/background-removal-node": "^1.4.5",
+    "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "class-variance-authority": "^0.7.0",
