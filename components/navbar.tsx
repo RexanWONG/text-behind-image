@@ -1,20 +1,34 @@
-import React from 'react'
-import { Button } from './ui/button'
+import React from 'react';
+import { usePathname } from 'next/navigation';
+import { Button } from './ui/button';
 
 const Navbar = () => {
+  const pathname = usePathname();
+  const currentRoute = pathname
+
   return (
-    <div className='flex flex-row items-center justify-between p-5 px-10'>
-        <h2 className="text-2xl font-semibold tracking-tight">
+    <div className='p-5 px-10'>
+      {currentRoute === '/' ? (
+        <div className='flex flex-row items-center justify-between'>
+          <h2 className="text-2xl font-semibold tracking-tight">
             Text behind image
-        </h2>
-
-        <div>
-            <Button>
-                Upload image
-            </Button>
+          </h2>
+          <Button>
+            New design
+          </Button>
         </div>
+      ) : currentRoute === '/design' ? (
+        <div className='flex flex-row items-center justify-between'>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Text behind image editor
+          </h2>
+          <Button>
+            Upload image
+          </Button>
+        </div>
+      ) : null}
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
