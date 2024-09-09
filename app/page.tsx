@@ -22,7 +22,6 @@ const page = () => {
             ) : (
                 <Authenticate />
             )}
-            
         </>
     );
 }
