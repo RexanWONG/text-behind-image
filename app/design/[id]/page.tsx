@@ -8,7 +8,11 @@ import { Separator } from '@/components/ui/separator';
 import NavbarDesign from '@/components/navbar-design';
 import Authenticate from '@/components/authenticate';
 
-const page = () => {
+interface IParams {
+  id: number;
+} 
+
+const page = ({ params }: { params: IParams }) => {
   const { user } = useUser()
   const { session } = useSessionContext()
 
@@ -16,7 +20,7 @@ const page = () => {
     <>
       {user && session && session.user ? (
           <div className='flex flex-col min-h-screen'>
-              <NavbarDesign />
+              <NavbarDesign designId={params.id}/>
               <Separator /> 
           </div>
         ) : (

@@ -1,4 +1,4 @@
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { FcGoogle } from "react-icons/fc"
@@ -29,23 +29,23 @@ const Authenticate = () => {
   }
 
   return (
-    <Dialog defaultOpen>
-      <DialogTrigger asChild>
+    <AlertDialog defaultOpen>
+      <AlertDialogTrigger asChild>
         <></>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Authenticate with Google</DialogTitle>
-          <DialogDescription>To continue, please sign in with your Google account.</DialogDescription>
-        </DialogHeader>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="sm:max-w-[425px]">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Authenticate with Google</AlertDialogTitle>
+          <AlertDialogDescription>To continue, please sign in with your Google account.</AlertDialogDescription>
+        </AlertDialogHeader>
         <div className="grid gap-4 py-4">
             <Button variant="outline" className="w-full gap-2" onClick={() => signInWithGoogle()}>
             <FcGoogle />
             Sign in with Google
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 

@@ -1,9 +1,13 @@
 import React from 'react';
-import { Button } from './ui/button';
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { useUser } from '@/hooks/useUser';
+import UploadImageButton from './upload-image-button';
 
-const NavbarDesign = () => {
+interface NavbarDesignProps {
+    designId: number;
+}
+
+const NavbarDesign:React.FC<NavbarDesignProps> = ({ designId }) => {
   const { user } = useUser()
 
   return (
@@ -12,9 +16,7 @@ const NavbarDesign = () => {
           Text behind image editor
         </h2>
         <div className='flex gap-4'>
-            <Button>
-                Upload image
-            </Button>
+            <UploadImageButton designId={designId} />
             <Avatar>
                 <AvatarImage src={user?.user_metadata.avatar_url} />
             </Avatar>
