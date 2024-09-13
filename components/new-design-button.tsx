@@ -61,7 +61,7 @@ const NewDesignButton:React.FC<NewDesignButtonProps> = ({ userId }) => {
                 Creating new design
             </Button>
         ) : (
-            <Button variant={'secondary'} onClick={createNewDesign}>
+            <Button onClick={createNewDesign}>
                 Create new design
             </Button>
         )
