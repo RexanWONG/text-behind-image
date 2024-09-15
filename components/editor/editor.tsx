@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Design } from '@/types';
 import { removeBackground } from "@imgly/background-removal";
+import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from '../ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -117,19 +118,20 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
     return (
         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen'>
             <div className="min-h-[400px] w-[80%] p-4 md:min-h-[700px] lg:min-h-[700px] border border-border rounded-lg relative overflow-hidden">
-                <Image
-                    src={design[0].image}
-                    alt={design[0].name}
-                    layout="fill"
-                    objectFit="contain" 
-                    objectPosition="center" 
-                    className={`${!isImageSetupDone ? 'animate-pulse' : ''}`}
-                />
+                {isImageSetupDone ? (
+                    <Image
+                        src={design[0].image}
+                        alt={design[0].name}
+                        layout="fill"
+                        objectFit="contain" 
+                        objectPosition="center" 
+                    />
+                ) : (
+                    <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
+                )}
                 {isImageSetupDone && textSets.map(textSet => (
                     <div
                         key={textSet.id}
-                        contentEditable
-                        suppressContentEditableWarning
                         style={{
                             position: 'absolute',
                             top: `${50 - textSet.top}%`,
@@ -158,7 +160,7 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
                 )}
             </div>
             <div className='flex flex-col w-full'>
-                <Button variant={'secondary'} onClick={addNewTextSet}>Add New Text Set</Button>
+                <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                 <Accordion type="single" collapsible className="w-full mt-2">
                     {textSets.map(textSet => (
                         <TextCustomizer 
