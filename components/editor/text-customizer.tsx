@@ -1,6 +1,7 @@
 import React from 'react';
 import InputField from './input-field';
 import SliderField from './slider-field';
+import FontFamilyPicker from './font-picker'; 
 import { Button } from '../ui/button';
 import {
   AccordionContent,
@@ -12,6 +13,7 @@ interface TextCustomizerProps {
     textSet: {
         id: number;
         text: string;
+        fontFamily: string;
         top: number;
         left: number;
         color: string;
@@ -33,6 +35,11 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     currentValue={textSet.text}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
+                <FontFamilyPicker
+                    attribute="fontFamily" // Specify the attribute for font family
+                    currentFont={textSet.fontFamily} // Assuming textSet has a fontFamily property
+                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                /> 
                 <SliderField
                     attribute="fontSize"
                     label="Font Size"
@@ -69,7 +76,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     currentValue={textSet.top}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
-                <Button onClick={() => removeTextSet(textSet.id)} variant="destructive" className='mt-8'>Remove Text Set</Button>
+                <Button onClick={() => removeTextSet(textSet.id)} variant="destructive" className='my-8'>Remove Text Set</Button>
             </AccordionContent>
         </AccordionItem>
     );

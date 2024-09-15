@@ -17,6 +17,7 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
         {
             id: 1,
             text: 'edit',
+            fontFamily: 'Inter',
             top: 0,
             left: 0,
             color: 'white',
@@ -54,6 +55,7 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
         setTextSets(prev => [...prev, {
             id: newId,
             text: 'edit',
+            fontFamily: 'Inter',
             top: 0,
             left: 0,
             color: 'white',
@@ -92,6 +94,7 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
                             fontSize: `${textSet.fontSize}px`,
                             fontWeight: textSet.fontWeight,
                             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
+                            fontFamily: textSet.fontFamily,
                         }}
                     >
                         {textSet.text}
