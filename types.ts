@@ -11,5 +11,5 @@ export interface Design {
     name: string;
     created_at: string;
     image: string;
-    text_style: JSON;
+    text_style: JSON[];
 }
