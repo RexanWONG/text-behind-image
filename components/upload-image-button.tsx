@@ -95,7 +95,7 @@ const UploadImageButton: React.FC<UploadImageButtonProps> = ({ designId }) => {
           Uploading image
         </Button>
       ) : (
-        <Button variant={'secondary'} onClick={handleUploadImage}>
+        <Button onClick={handleUploadImage}>
           Upload image
         </Button>
       )}

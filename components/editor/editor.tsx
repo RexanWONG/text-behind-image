@@ -1,10 +1,10 @@
-'use client'
-
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Design } from '@/types'
-import { removeBackground } from "@imgly/background-removal"; 
-import SliderField from './slider-field';
+import { removeBackground } from "@imgly/background-removal";
+import { Accordion } from "@/components/ui/accordion"
+import { Button } from '../ui/button';
+import TextCustomizer from './text-customizer';
 
 interface EditorProps {
     design: Design[]
@@ -13,13 +13,17 @@ interface EditorProps {
 const Editor: React.FC<EditorProps> = ({ design }) => {
     const [isImageSetupDone, setIsImageSetupDone] = useState<boolean>(false)
     const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(null)
-    const [textAttributes, setTextAttributes] = useState({
-        top: 50,
-        left: 50,
-        color: 'white',
-        fontSize: 200,
-        fontWeight: 800,
-    })
+    const [textSets, setTextSets] = useState([
+        {
+            id: 1,
+            text: 'edit',
+            top: 0,
+            left: 0,
+            color: 'white',
+            fontSize: 200,
+            fontWeight: 800,
+        }
+    ]);
 
     const setupImage = async () => {
         try {
@@ -39,8 +43,27 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
         setupImage()
     }, [design]);
 
-    const handleAttributeChange = (attribute: string, value: any) => {
-        setTextAttributes(prev => ({ ...prev, [attribute]: value }))
+    const handleAttributeChange = (id: number, attribute: string, value: any) => {
+        setTextSets(prev => prev.map(set => 
+            set.id === id ? { ...set, [attribute]: value } : set
+        ));
+    }
+
+    const addNewTextSet = () => {
+        const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
+        setTextSets(prev => [...prev, {
+            id: newId,
+            text: 'edit',
+            top: 0,
+            left: 0,
+            color: 'white',
+            fontSize: 200,
+            fontWeight: 800,
+        }]);
+    }
+
+    const removeTextSet = (id: number) => {
+        setTextSets(prev => prev.filter(set => set.id !== id));
     }
 
     return (
@@ -54,25 +77,26 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
                     objectPosition="center" 
                     className={`${!isImageSetupDone ? 'animate-pulse' : ''}`}
                 />
-                {isImageSetupDone && (
+                {isImageSetupDone && textSets.map(textSet => (
                     <div
+                        key={textSet.id}
                         contentEditable
                         suppressContentEditableWarning
                         style={{
                             position: 'absolute',
-                            top: `${50 - textAttributes.top}%`,
-                            left: `${textAttributes.left + 50}%`,
+                            top: `${50 - textSet.top}%`,
+                            left: `${textSet.left + 50}%`,
                             transform: 'translate(-50%, -50%)',
-                            color: textAttributes.color,
+                            color: textSet.color,
                             textAlign: 'center',
-                            fontSize: `${textAttributes.fontSize}px`,
-                            fontWeight: textAttributes.fontWeight,
+                            fontSize: `${textSet.fontSize}px`,
+                            fontWeight: textSet.fontWeight,
                             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
                         }}
                     >
-                        POV
+                        {textSet.text}
                     </div>
-                )}
+                ))}
                 {removedBgImageUrl && (
                     <Image
                         src={removedBgImageUrl}
@@ -85,42 +109,17 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
                 )}
             </div>
             <div className='flex flex-col w-full'>
-                <SliderField
-                    attribute="fontSize"
-                    label="Font Size"
-                    min={10}
-                    max={800}
-                    step={1}
-                    currentValue={textAttributes.fontSize}
-                    handleAttributeChange={handleAttributeChange}
-                />
-                <SliderField
-                    attribute="fontWeight"
-                    label="Font Weight"
-                    min={100}
-                    max={900}
-                    step={1}
-                    currentValue={textAttributes.fontWeight}
-                    handleAttributeChange={handleAttributeChange}
-                />
-                <SliderField
-                    attribute="left"
-                    label="X Position"
-                    min={-200}
-                    max={200}
-                    step={1}
-                    currentValue={textAttributes.left}
-                    handleAttributeChange={handleAttributeChange}
-                />
-                <SliderField
-                    attribute="top"
-                    label="Y Position"
-                    min={-100}
-                    max={100}
-                    step={1}
-                    currentValue={textAttributes.top}
-                    handleAttributeChange={handleAttributeChange}
-                />
+                <Button onClick={addNewTextSet}>Add New Text Set</Button>
+                <Accordion type="single" collapsible className="w-full mt-2">
+                    {textSets.map(textSet => (
+                        <TextCustomizer 
+                            key={textSet.id}
+                            textSet={textSet}
+                            handleAttributeChange={handleAttributeChange}
+                            removeTextSet={removeTextSet}
+                        />
+                    ))}
+                </Accordion>
             </div>
         </div>
     )

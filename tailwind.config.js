@@ -93,7 +93,7 @@ module.exports = {
   					backgroundPosition: '350% 50%, 350% 50%'
   				}
   			},
-  			'shake': {
+  			shake: {
   				'10%, 90%': {
   					transform: 'translate3d(-5px, 0, 0)'
   				},
