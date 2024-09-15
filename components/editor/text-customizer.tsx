@@ -1,6 +1,7 @@
 import React from 'react';
 import InputField from './input-field';
 import SliderField from './slider-field';
+import ColorPicker from './color-picker';
 import FontFamilyPicker from './font-picker'; 
 import { Button } from '../ui/button';
 import {
@@ -36,10 +37,16 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
                 <FontFamilyPicker
-                    attribute="fontFamily" // Specify the attribute for font family
-                    currentFont={textSet.fontFamily} // Assuming textSet has a fontFamily property
+                    attribute="fontFamily" 
+                    currentFont={textSet.fontFamily} 
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 /> 
+                <ColorPicker
+                    attribute="color" 
+                    label="Text Color"
+                    currentColor={textSet.color} 
+                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                />
                 <SliderField
                     attribute="fontSize"
                     label="Font Size"
