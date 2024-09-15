@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Design } from '@/types';
 import NavbarDesign from '@/components/navbar-design';
 import Authenticate from '@/components/authenticate';
-import Editor from '@/components/editor';
+import Editor from '@/components/editor/editor';
 
 interface IParams {
   id: number;
