@@ -15,6 +15,7 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ design }) => {
     const supabase = useSupabaseClient()
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const { toast } = useToast();
 
     const [isImageSetupDone, setIsImageSetupDone] = useState<boolean>(false);
@@ -80,7 +81,70 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
             console.error(error);
         }
     };
-
+ 
+    const saveCompositeImage = () => {
+        if (!canvasRef.current || !isImageSetupDone) return;
+    
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+    
+        // Get the current display size of the image in the editor
+        const displayWidth = document.querySelector('.image-container')?.clientWidth || 1000;
+        const displayHeight = document.querySelector('.image-container')?.clientHeight || 1000;
+    
+        const bgImg = new (window as any).Image();
+        bgImg.crossOrigin = "anonymous";
+        bgImg.onload = () => {
+            // Set canvas size to match the image
+            canvas.width = bgImg.width;
+            canvas.height = bgImg.height;
+    
+            // Calculate the scale factor
+            const scaleX = canvas.width / displayWidth;
+            const scaleY = canvas.height / displayHeight;
+    
+            // Draw background image
+            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    
+            // Draw text
+            textSets.forEach(textSet => {
+                const scaledFontSize = textSet.fontSize * scaleX;
+                ctx.font = `${textSet.fontWeight} ${scaledFontSize}px ${textSet.fontFamily}`;
+                ctx.fillStyle = textSet.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+    
+                const x = canvas.width * (textSet.left + 50) / 100;
+                const y = canvas.height * (50 - textSet.top) / 100;
+    
+                ctx.fillText(textSet.text, x, y);
+            });
+    
+            // Draw removed background image
+            if (removedBgImageUrl) {
+                const removedBgImg = new (window as any).Image();
+                removedBgImg.crossOrigin = "anonymous";
+                removedBgImg.onload = () => {
+                    ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+                    triggerDownload();
+                };
+                removedBgImg.src = removedBgImageUrl;
+            } else {
+                triggerDownload();
+            }
+        };
+        bgImg.src = design[0].image;
+    
+        function triggerDownload() {
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'composite_image.png';
+            link.href = dataUrl;
+            link.click();
+        }
+    };
+    
     useEffect(() => {
         setupImage();
     }, [design]);
@@ -110,7 +174,7 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
             saveTextSets();
-        }, 1000);
+        }, 2000);
     
         return () => clearTimeout(debounceTimer);
     }, [textSets]);
@@ -171,6 +235,10 @@ const Editor: React.FC<EditorProps> = ({ design }) => {
                         />
                     ))}
                 </Accordion>
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
+                <Button onClick={saveCompositeImage}>
+                    Save image
+                </Button>
             </div>
         </div>
     );

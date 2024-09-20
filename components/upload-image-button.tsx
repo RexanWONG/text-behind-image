@@ -4,12 +4,14 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import { useToast } from '@/hooks/use-toast';
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { generateHash } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface UploadImageButtonProps {
   designId: number;
 }
 
 const UploadImageButton: React.FC<UploadImageButtonProps> = ({ designId }) => {
+  const router = useRouter()
   const supabase = useSupabaseClient()
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -67,6 +69,8 @@ const UploadImageButton: React.FC<UploadImageButtonProps> = ({ designId }) => {
       toast({
         title: "🎉 Image uploaded successfully",
       })
+
+      window.location.reload()
 
       setIsUploadingImage(false)
     } catch (error) {
