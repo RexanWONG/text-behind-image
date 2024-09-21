@@ -60,6 +60,9 @@ const Page = () => {
             color: 'white',
             fontSize: 200,
             fontWeight: 800,
+            opacity: 1,
+            shadowColor: 'rgba(0, 0, 0, 0.8)',
+            shadowSize: 4
         }]);
     };
 
@@ -89,15 +92,16 @@ const Page = () => {
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
             textSets.forEach(textSet => {
-                ctx.font = `${textSet.fontWeight} ${textSet.fontSize}px ${textSet.fontFamily}`;
+                ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
+                ctx.globalAlpha = textSet.opacity
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
-
                 ctx.fillText(textSet.text, x, y);
+                ctx.globalAlpha = 1
             });
 
             if (removedBgImageUrl) {
@@ -117,7 +121,7 @@ const Page = () => {
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = 'composite_image.png';
+            link.download = 'text-behind-image.png';
             link.href = dataUrl;
             link.click();
         }
@@ -148,7 +152,7 @@ const Page = () => {
                         </div>
                     </div>
                     <Separator />
-                    {selectedImage && (
+                    {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
                             <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {isImageSetupDone ? (
@@ -174,8 +178,8 @@ const Page = () => {
                                             textAlign: 'center',
                                             fontSize: `${textSet.fontSize}px`,
                                             fontWeight: textSet.fontWeight,
-                                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
                                             fontFamily: textSet.fontFamily,
+                                            opacity: textSet.opacity
                                         }}
                                     >
                                         {textSet.text}
@@ -189,7 +193,7 @@ const Page = () => {
                                         objectFit="contain" 
                                         objectPosition="center" 
                                         className="absolute top-0 left-0 w-full h-full"
-                                    />
+                                    /> 
                                 )}
                             </div>
                             <div className='flex flex-col w-full'>
@@ -210,6 +214,10 @@ const Page = () => {
                                     Save image
                                 </Button>
                             </div>
+                        </div>
+                    ) : (
+                        <div className='flex items-center justify-center min-h-screen w-full'>
+                            <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
                         </div>
                     )}
                 </div>
