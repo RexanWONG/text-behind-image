@@ -32,7 +32,7 @@ const page = () => {
                 </HoverBorderGradient>
             </Link>
             
-            <div className='w-full h-full'>
+            <div className='w-full h-full mt-2'>
                 <HeroImages />
                 <HeroParallaxImages />
             </div>
