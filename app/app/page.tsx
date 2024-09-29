@@ -86,32 +86,38 @@ const Page = () => {
 
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone) return;
-
+    
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-
+    
         const bgImg = new (window as any).Image();
         bgImg.crossOrigin = "anonymous";
         bgImg.onload = () => {
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
-
+    
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-
+    
             textSets.forEach(textSet => {
+                ctx.save(); // Save the current state
                 ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
-                ctx.globalAlpha = textSet.opacity
+                ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-
+    
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
-                ctx.fillText(textSet.text, x, y);
-                ctx.globalAlpha = 1
+    
+                // Move the context to the text position and rotate
+                ctx.translate(x, y);
+                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
+                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
+                ctx.globalAlpha = 1;
+                ctx.restore(); // Restore the original state
             });
-
+    
             if (removedBgImageUrl) {
                 const removedBgImg = new (window as any).Image();
                 removedBgImg.crossOrigin = "anonymous";
@@ -125,7 +131,7 @@ const Page = () => {
             }
         };
         bgImg.src = selectedImage || '';
-
+    
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');

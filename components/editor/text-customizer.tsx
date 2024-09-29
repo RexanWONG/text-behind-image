@@ -74,7 +74,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                 />
                 <SliderField
                     attribute="fontSize"
-                    label="Font Size"
+                    label="Text Size"
                     min={10} 
                     max={800}
                     step={1}
@@ -102,7 +102,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                 <SliderField
                     attribute="rotation"
                     label="Rotation"
-                    min={0}
+                    min={-360}
                     max={360}
                     step={1}
                     currentValue={textSet.rotation}

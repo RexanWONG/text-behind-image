@@ -2,14 +2,14 @@
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { cn } from "@/lib/utils";
 
 export const ParallaxScroll = ({
   images,
   className,
 }: {
-  images: string[];
+  images: string[] | StaticImageData[];
   className?: string;
 }) => {
   const gridRef = useRef<any>(null);
@@ -17,9 +17,9 @@ export const ParallaxScroll = ({
 
   });
 
-  const translateFirst = useTransform(scrollYProgress, [0, 1], [0, -500]);
-  const translateSecond = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const translateThird = useTransform(scrollYProgress, [0, 1], [0, -500]);
+  const translateFirst = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const translateSecond = useTransform(scrollYProgress, [0, 1], [0, 0]);
+  const translateThird = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   const third = Math.ceil(images.length / 3);
 
@@ -33,7 +33,7 @@ export const ParallaxScroll = ({
       ref={gridRef}
     >
       <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl items-start justify-start mx-auto gap-10 py-40 px-10"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl items-start justify-start mx-auto gap-10 pt-40 px-10"
         ref={gridRef}
       >
         <div className="grid gap-10">

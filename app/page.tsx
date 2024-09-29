@@ -28,7 +28,7 @@ const page = () => {
             </HeroHighlight>
             <Link href={'/app'}>
                 <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
-                    Get started
+                    Open the app
                 </HoverBorderGradient>
             </Link>
             
