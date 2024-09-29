@@ -21,6 +21,7 @@ interface TextCustomizerProps {
         fontSize: number;
         fontWeight: number;
         opacity: number;
+        rotation: number;
         shadowColor: string;
         shadowSize: number;
     };
@@ -54,6 +55,24 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     />
                 </div>
                 <SliderField
+                    attribute="left"
+                    label="X Position"
+                    min={-200}
+                    max={200}
+                    step={1} 
+                    currentValue={textSet.left}
+                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                />
+                <SliderField
+                    attribute="top"
+                    label="Y Position"
+                    min={-100}
+                    max={100}
+                    step={1}
+                    currentValue={textSet.top}
+                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                />
+                <SliderField
                     attribute="fontSize"
                     label="Font Size"
                     min={10} 
@@ -81,21 +100,12 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
                 <SliderField
-                    attribute="left"
-                    label="X Position"
-                    min={-200}
-                    max={200}
-                    step={1} 
-                    currentValue={textSet.left}
-                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                />
-                <SliderField
-                    attribute="top"
-                    label="Y Position"
-                    min={-100}
-                    max={100}
+                    attribute="rotation"
+                    label="Rotation"
+                    min={0}
+                    max={360}
                     step={1}
-                    currentValue={textSet.top}
+                    currentValue={textSet.rotation}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
                 <div className="flex flex-row gap-2 my-8">

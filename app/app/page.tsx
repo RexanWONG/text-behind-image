@@ -64,7 +64,8 @@ const Page = () => {
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
-            shadowSize: 4
+            shadowSize: 4,
+            rotation: 0
         }]);
     };
 
@@ -180,7 +181,7 @@ const Page = () => {
                                             position: 'absolute',
                                             top: `${50 - textSet.top}%`,
                                             left: `${textSet.left + 50}%`,
-                                            transform: 'translate(-50%, -50%)',
+                                            transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
                                             color: textSet.color,
                                             textAlign: 'center',
                                             fontSize: `${textSet.fontSize}px`,
