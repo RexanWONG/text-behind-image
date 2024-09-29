@@ -13,6 +13,7 @@ import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
+import '@/app/fonts.css'
 
 const Page = () => {
     const { user } = useUser();

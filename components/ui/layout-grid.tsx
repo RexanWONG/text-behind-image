@@ -1,14 +1,14 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 type Card = {
   id: number;
   content: JSX.Element | React.ReactNode | string;
   className: string;
-  thumbnail: string;
+  thumbnail: string | StaticImageData; // Allow both string and StaticImageData
 };
 
 export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
@@ -63,7 +63,7 @@ const ImageComponent = ({ card }: { card: Card }) => {
   return (
     <motion.img
       layoutId={`image-${card.id}-image`}
-      src={card.thumbnail}
+      src={typeof card.thumbnail === 'string' ? card.thumbnail : card.thumbnail.src} // Handle both types
       height="500"
       width="500"
       className={cn(
