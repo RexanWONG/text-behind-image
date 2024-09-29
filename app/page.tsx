@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { motion } from "framer-motion";
@@ -6,6 +6,7 @@ import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight';
 import { HeroImages } from '@/components/hero-images';
 import { TextHoverEffect } from '@/components/ui/text-hover-effect';
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
+import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import Link from 'next/link';
 
 const page = () => {
@@ -31,12 +32,10 @@ const page = () => {
                 </HoverBorderGradient>
             </Link>
             
-            <div className='w-full'>
+            <div className='w-full h-full'>
                 <HeroImages />
+                <HeroParallaxImages />
             </div>
-            {/* <div className='mt-20'>
-                <FeatureSection />
-            </div> */}
             <div className="h-[40rem] flex items-center justify-center">
                 <TextHoverEffect text="tbi" />
             </div>
@@ -44,4 +43,4 @@ const page = () => {
     );
 }
 
-export default page;    
+export default page;
