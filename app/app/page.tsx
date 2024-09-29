@@ -1,3 +1,4 @@
+// app/app/page.tsx
 'use client'
 
 import React, { useRef, useState } from 'react';
@@ -141,7 +142,7 @@ const Page = () => {
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
-                                accept="image/*"
+                                accept=".jpg, .jpeg, .png" // Updated to accept only jpg and png
                             />
                             <Button onClick={handleUploadImage}>
                                 Upload image
