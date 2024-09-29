@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight';
 import { HeroImages } from '@/components/hero-images';
-import { TextHoverEffect } from '@/components/ui/text-hover-effect';
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import Link from 'next/link';
@@ -36,8 +35,10 @@ const page = () => {
                 <HeroImages />
                 <HeroParallaxImages />
             </div>
-            <div className="h-[40rem] flex items-center justify-center">
-                <TextHoverEffect text="tbi" />
+            <div className="flex flex-col items-center justify-center my-10">
+                <div className='text-2xl'>
+                    Created by <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>Rexan Wong</Link>         
+                </div> 
             </div>
         </div>
     );
