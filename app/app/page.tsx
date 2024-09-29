@@ -74,6 +74,11 @@ const Page = () => {
         ));
     };
 
+    const duplicateTextSet = (textSet: any) => {
+        const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
+        setTextSets(prev => [...prev, { ...textSet, id: newId }]);
+    };
+
     const removeTextSet = (id: number) => {
         setTextSets(prev => prev.filter(set => set.id !== id));
     };
@@ -207,6 +212,7 @@ const Page = () => {
                                             textSet={textSet}
                                             handleAttributeChange={handleAttributeChange}
                                             removeTextSet={removeTextSet}
+                                            duplicateTextSet={duplicateTextSet}
                                         />
                                     ))}
                                 </Accordion>

@@ -26,9 +26,10 @@ interface TextCustomizerProps {
     };
     handleAttributeChange: (id: number, attribute: string, value: any) => void;
     removeTextSet: (id: number) => void;
+    duplicateTextSet: (textSet: any) => void; // Add this line
 }
 
-const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttributeChange, removeTextSet }) => {
+const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttributeChange, removeTextSet, duplicateTextSet }) => {
     return (
         <AccordionItem value={`item-${textSet.id}`}>
             <AccordionTrigger>{textSet.text}</AccordionTrigger>
@@ -51,12 +52,6 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         currentColor={textSet.color} 
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
-                    {/* <ColorPicker
-                        attribute="shadowColor" 
-                        label="Shadow Color"
-                        currentColor={textSet.shadowColor}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />  */}
                 </div>
                 <SliderField
                     attribute="fontSize"
@@ -67,7 +62,6 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     currentValue={textSet.fontSize}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
-                
                 <SliderField
                     attribute="fontWeight"
                     label="Font Weight"
@@ -86,15 +80,6 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     currentValue={textSet.opacity}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
-                {/* <SliderField
-                    attribute="shadowSize"
-                    label="Shadow Size"
-                    min={0}
-                    max={20} // Adjust max value as needed
-                    step={1}
-                    currentValue={textSet.shadowSize}
-                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                /> */}
                 <SliderField
                     attribute="left"
                     label="X Position"
@@ -113,7 +98,10 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     currentValue={textSet.top}
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                 />
-                <Button onClick={() => removeTextSet(textSet.id)} variant="destructive" className='my-8'>Remove Text Set</Button>
+                <div className="flex flex-row gap-2 my-8">
+                    <Button onClick={() => duplicateTextSet(textSet)}>Duplicate Text Set</Button>
+                    <Button onClick={() => removeTextSet(textSet.id)} variant="destructive">Remove Text Set</Button>
+                </div>
             </AccordionContent>
         </AccordionItem>
     );
