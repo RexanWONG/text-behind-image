@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import Link from "next/link";
 
-export function FeatureSection() {
+export function BentoGrid() {
   const features = [
     {
       title: "Track issues effectively",
