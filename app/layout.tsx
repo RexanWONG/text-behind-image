@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from 'next/font/google'
 import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
@@ -24,6 +26,8 @@ export default function RootLayout({
             <UserProvider>
               <div>
                 {children}
+                <Analytics />
+                <SpeedInsights />
                 <Toaster />
               </div>
             </UserProvider>
