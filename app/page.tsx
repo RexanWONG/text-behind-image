@@ -10,7 +10,7 @@ import { AdditionalInfo } from '@/components/additional-info';
 import Link from 'next/link';
 
 const page = () => {
-    return (
+    return ( 
         <div className='flex flex-col min-h-screen items-center w-full mt-20'>
             <HeroHighlight>
                 <motion.h1
