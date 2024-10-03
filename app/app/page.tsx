@@ -113,8 +113,7 @@ const Page = () => {
                 // Move the context to the text position and rotate
                 ctx.translate(x, y);
                 ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-                ctx.globalAlpha = 1;
+                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0) 
                 ctx.restore(); // Restore the original state
             });
     
@@ -194,7 +193,7 @@ const Page = () => {
                                             fontWeight: textSet.fontWeight,
                                             fontFamily: textSet.fontFamily,
                                             opacity: textSet.opacity
-                                        }}
+                                        }} 
                                     >
                                         {textSet.text}
                                     </div>
