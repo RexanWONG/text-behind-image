@@ -32,7 +32,7 @@ const page = () => {
                 </HoverBorderGradient>
             </Link>
 
-            <a href="https://www.producthunt.com/posts/text-behind-image?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-text&#0045;behind&#0045;image" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=494264&theme=light" alt="Text&#0032;Behind&#0032;Image - Create&#0032;stunning&#0032;text&#0045;behind&#0045;image&#0032;designs&#0032;easily | Product Hunt" width="250" height="54" /></a>
+            <a href="https://www.producthunt.com/posts/text-behind-image?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-text&#0045;behind&#0045;image" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=494264&theme=light&period=daily" alt="Text&#0032;Behind&#0032;Image - Create&#0032;stunning&#0032;text&#0045;behind&#0045;image&#0032;designs&#0032;easily | Product Hunt" width="250" height="54" /></a>
             
             <div className='w-full h-full mt-2'>
                 <HeroImages />
