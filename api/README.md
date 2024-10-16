@@ -4,17 +4,17 @@
 
     ## Why a Separate API?
 
-    While Next.js provides API routes, there are several reasons for implementing a separate Express.js API for this project:
+    A separate Express.js API is implemented for this project to address limitations in the current browser-based implementation:
 
-    1. **Performance**: Image processing tasks can be computationally intensive. By offloading these tasks to a separate API, we prevent blocking the main Next.js server, ensuring better performance for other parts of the application.
+    1. **Offload Computation**: The current implementation relies on the browser for all computation, which can be resource-intensive. A separate API allows these tasks to be performed server-side.
 
-    2. **Scalability**: A separate API allows for independent scaling of the image processing service, which can be crucial as the application grows.
+    2. **Performance**: Image processing is computationally expensive. An API offloads this work from the client, improving overall application performance.
 
-    3. **File System Access**: Next.js API routes have limitations when it comes to file system operations, especially in serverless environments. A separate Express.js API provides more flexibility for file handling, which is essential for image processing tasks.
+    3. **Scalability**: A dedicated API enables independent scaling of image processing services as the application grows.
 
-    4. **Long-Running Processes**: Some image processing tasks may take longer than the typical timeout limits set by serverless functions or Next.js API routes. A separate API allows for better handling of these long-running processes.
+    4. **Broader Compatibility**: Server-side processing ensures the application works across various devices and browsers, regardless of their computational capabilities.
 
-    5. **Dependency Management**: The image processing libraries used (like `@imgly/background-removal-node` and `canvas`) may have specific system requirements that are easier to manage in a separate Node.js environment.
+    5. **Resource Management**: Certain image processing libraries and operations are better suited for a controlled server environment than a browser context.
 
     ## Running the API
 
@@ -59,6 +59,8 @@
     ```
 
     **Expected Response**:
+
+    The API will save the image to the `uploads` directory and return the path to the removed background image.
     ```json
     {
       "success": true,
@@ -68,6 +70,8 @@
     ```
 
     ### 2. Preview Image API
+
+    The Preview Image API is used to add text to an image with a removed background.
 
     **Endpoint**: `/api/preview-image`
 
@@ -100,18 +104,9 @@
     ```
 
     **Expected Response**:
-    The API will return the preview image file directly.
+    The API will save the preview image to the `uploads` directory without returning the path to the preview image.
 
-    ## Reasons for Implementing Two Separate API Endpoints
 
-    1. **Modularity**: Separating the background removal and text addition processes allows for better code organization and maintenance.
+    ## Reason for Implementing Two Separate API Endpoints
 
-    2. **Flexibility**: Users can remove backgrounds without necessarily adding text, providing more options for image processing.
-
-    3. **Performance Optimization**: By caching or saving the background-removed images, we can reduce processing time for subsequent text additions or modifications.
-
-    4. **Resource Management**: Background removal is typically more resource-intensive than text addition. Separating these processes allows for better resource allocation and potential optimization of each task independently.
-
-    5. **Error Handling**: With separate endpoints, it's easier to identify and handle errors specific to each process, improving the overall reliability of the application.
-
-    6. **Future Scalability**: This architecture makes it easier to add new features or modify existing ones without affecting the entire image processing pipeline.
+    The main reason for separating background removal and text addition is flexibility. This allows users to make multiple attempts at formatting text without needing to remove the background each time, significantly improving efficiency and user experience.
