@@ -1,4 +1,4 @@
-// app/app/page.tsx
+// app/gradient-behind-image/page.tsx
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -28,20 +28,21 @@ const Page = () => {
     const [color1, setColor1] = useState("#ff0000");
     const [color2, setColor2] = useState("#ffff00");
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-    const gradientCanvasRef = useRef<HTMLCanvasElement>(null);
+    const [gradientDataURL, setGradientDataURL] = useState<string | null>(null);
 
     useEffect(() => {
-        if (gradientCanvasRef.current && imageSize.width && imageSize.height) {
-            const canvas = gradientCanvasRef.current;
+        if (imageSize.width && imageSize.height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = imageSize.width;
+            canvas.height = imageSize.height;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                canvas.width = imageSize.width;
-                canvas.height = imageSize.height;
                 const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
                 gradient.addColorStop(0, color1);
                 gradient.addColorStop(1, color2);
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                setGradientDataURL(canvas.toDataURL());
             }
         }
     }, [color1, color2, imageSize]);
@@ -117,7 +118,7 @@ const Page = () => {
     };
 
     const saveCompositeImage = () => {
-        if (!canvasRef.current || !isImageSetupDone || !gradientCanvasRef.current) return;
+        if (!canvasRef.current || !isImageSetupDone || !gradientDataURL) return;
     
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -127,37 +128,41 @@ const Page = () => {
         canvas.height = imageSize.height;
     
         // Draw gradient background
-        ctx.drawImage(gradientCanvasRef.current, 0, 0);
-    
-        // Draw text
-        textSets.forEach(textSet => {
-            ctx.save();
-            ctx.font = `${textSet.fontWeight} ${textSet.fontSize}px ${textSet.fontFamily}`;
-            ctx.fillStyle = textSet.color;
-            ctx.globalAlpha = textSet.opacity;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-    
-            const x = canvas.width * (textSet.left + 50) / 100;
-            const y = canvas.height * (50 - textSet.top) / 100;
-    
-            ctx.translate(x, y);
-            ctx.rotate((textSet.rotation * Math.PI) / 180);
-            ctx.fillText(textSet.text, 0, 0);
-            ctx.restore();
-        });
-    
-        if (removedBgImageUrl) {
-            const removedBgImg = document.createElement('img');
-            removedBgImg.crossOrigin = "anonymous";
-            removedBgImg.onload = () => {
-                ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+        const gradientImg = new Image();
+        gradientImg.onload = () => {
+            ctx.drawImage(gradientImg, 0, 0);
+            
+            // Draw text
+            textSets.forEach(textSet => {
+                ctx.save();
+                ctx.font = `${textSet.fontWeight} ${textSet.fontSize}px ${textSet.fontFamily}`;
+                ctx.fillStyle = textSet.color;
+                ctx.globalAlpha = textSet.opacity;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+        
+                const x = canvas.width * (textSet.left + 50) / 100;
+                const y = canvas.height * (50 - textSet.top) / 100;
+        
+                ctx.translate(x, y);
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+                ctx.fillText(textSet.text, 0, 0);
+                ctx.restore();
+            });
+        
+            if (removedBgImageUrl) {
+                const removedBgImg = new Image();
+                removedBgImg.crossOrigin = "anonymous";
+                removedBgImg.onload = () => {
+                    ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+                    triggerDownload();
+                };
+                removedBgImg.src = removedBgImageUrl;
+            } else {
                 triggerDownload();
-            };
-            removedBgImg.src = removedBgImageUrl;
-        } else {
-            triggerDownload();
-        }
+            }
+        };
+        gradientImg.src = gradientDataURL;
     
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
@@ -196,14 +201,22 @@ const Page = () => {
                     {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
                             <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
-                                <canvas ref={gradientCanvasRef} className="absolute top-0 left-0 w-full h-full" style={{zIndex: 2}} />
+                                {gradientDataURL && (
+                                    <Image
+                                        src={gradientDataURL}
+                                        alt="Gradient background"
+                                        width={imageSize.width}
+                                        height={imageSize.height}
+                                        style={{position: 'absolute', top: 0, left: 0, zIndex: 1}}
+                                    />
+                                )}
                                 {isImageSetupDone ? (
                                     <Image
                                         src={selectedImage} 
                                         alt="Uploaded"
                                         width={imageSize.width}
                                         height={imageSize.height}
-                                        style={{position: 'relative', zIndex: 1}}
+                                        style={{position: 'relative', zIndex: 2, opacity: 0}}
                                     />
                                 ) : (
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
