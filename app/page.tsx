@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight';
 import { HeroImages } from '@/components/hero-images';
@@ -53,14 +53,31 @@ const Page = () => {
 }
 
 const Navbar = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
     const navItems = [
         { name: "Text Behind Image", link: "/text-behind-image" },
         { name: "Gradient Behind Image", link: "#" },
         { name: "Contact Us", link: "#" },
     ];
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
-        <div className="w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black">
+        <div className={`w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black transition-opacity duration-300 ${isScrolled ? 'bg-opacity-90 dark:bg-opacity-90' : ''}`}>
             <DesktopNav navItems={navItems} />
             <MobileNav navItems={navItems} />
         </div>
