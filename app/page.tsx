@@ -31,7 +31,7 @@ const page = () => {
                     {" "} designs easily
                 </motion.h1>
             </HeroHighlight>
-            <Link href={'/app'} className='mb-10'>
+            <Link href={'/text-behind-image'} className='mb-10'>
                 <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
                     Open the app
                 </HoverBorderGradient>
