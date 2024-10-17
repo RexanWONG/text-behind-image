@@ -19,7 +19,7 @@ const Page = () => {
     return (
         <div className='flex flex-col min-h-screen items-center w-full mt-10'>
             <Navbar />
-                <HeroHighlight>
+                <HeroHighlight className='mt-10'>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }} 
                         animate={{ opacity: 1, y: [20, -5, 0] }} 
@@ -54,9 +54,9 @@ const Page = () => {
 
 const Navbar = () => {
     const navItems = [
-        { name: "text-behind-image", link: "/text-behind-image" },
+        { name: "Text Behind Image", link: "/text-behind-image" },
+        { name: "Gradient Behind Image", link: "#" },
         { name: "Contact Us", link: "#" },
-        { name: "Acknowledgements", link: "#" },
     ];
 
     return (
