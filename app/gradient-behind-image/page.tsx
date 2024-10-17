@@ -37,6 +37,13 @@ const Page = () => {
             canvas.height = imageSize.height;
             const ctx = canvas.getContext('2d');
             if (ctx) {
+                // Check if color codes are valid
+                const isValidColor = (color: string) => /^#[0-9A-F]{6}$/i.test(color);
+                if (!isValidColor(color1) || !isValidColor(color2)) {
+                    console.error('Invalid color code');
+                    return;
+                }
+
                 const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
                 gradient.addColorStop(0, color1);
                 gradient.addColorStop(1, color2);
@@ -112,7 +119,10 @@ const Page = () => {
     };
 
     const setRandomColors = () => {
-        const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16);
+        const randomColor = () => {
+            const hex = Math.floor(Math.random()*16777215).toString(16);
+            return '#' + '0'.repeat(6 - hex.length) + hex; // Ensure 6 digits
+        };
         setColor1(randomColor());
         setColor2(randomColor());
     };
