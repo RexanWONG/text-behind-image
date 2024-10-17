@@ -129,16 +129,16 @@ const Page = () => {
 
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone || !gradientDataURL) return;
-    
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-    
+
         canvas.width = imageSize.width;
         canvas.height = imageSize.height;
-    
+
         // Draw gradient background
-        const gradientImg = new Image();
+        const gradientImg = document.createElement('img');
         gradientImg.onload = () => {
             ctx.drawImage(gradientImg, 0, 0);
             
@@ -150,18 +150,18 @@ const Page = () => {
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-        
+    
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
-        
+    
                 ctx.translate(x, y);
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
                 ctx.fillText(textSet.text, 0, 0);
                 ctx.restore();
             });
-        
+    
             if (removedBgImageUrl) {
-                const removedBgImg = new Image();
+                const removedBgImg = document.createElement('img');
                 removedBgImg.crossOrigin = "anonymous";
                 removedBgImg.onload = () => {
                     ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
@@ -173,7 +173,7 @@ const Page = () => {
             }
         };
         gradientImg.src = gradientDataURL;
-    
+
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
