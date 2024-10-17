@@ -24,7 +24,9 @@ const page = () => {
                 >
                     Create {" "}
                     <Highlight>
-                        <FlipWords className='text-white' words={words} />
+                        <span className="inline-block w-[470px] px-4 py-2">
+                            <FlipWords className='text-white' words={words} />
+                        </span>
                     </Highlight>
                     {" "} designs easily
                 </motion.h1>
