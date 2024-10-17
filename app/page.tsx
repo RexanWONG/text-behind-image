@@ -56,6 +56,7 @@ const Navbar = () => {
     const navItems = [
         { name: "text-behind-image", link: "/text-behind-image" },
         { name: "Contact Us", link: "#" },
+        { name: "Acknowledgements", link: "#" },
     ];
 
     return (
@@ -72,7 +73,7 @@ const DesktopNav = ({ navItems }: any) => {
         <motion.div
             onMouseLeave={() => { setHovered(null); }}
             className={cn(
-                "hidden lg:flex flex-row self-start bg-white dark:bg-neutral-950 items-center justify-between py-2 max-w-7xl mx-auto px-4 rounded-full relative z-[60] w-full",
+                "hidden lg:flex flex-row self-start bg-neutral-100  dark:bg-neutral-950 items-center justify-between py-2 max-w-7xl mx-auto px-4 rounded-full relative z-[60] w-full",
                 "sticky top-40 inset-x-0"
             )}
         >
@@ -88,7 +89,7 @@ const DesktopNav = ({ navItems }: any) => {
                         {hovered === idx && (
                             <motion.div
                                 layoutId="hovered"
-                                className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-neutral-800 rounded-full"
+                                className="w-full h-full absolute inset-0 bg-gray-200 dark:bg-neutral-800 rounded-full"
                             />
                         )}
                         <span className="relative z-20">{navItem.name}</span>
@@ -171,7 +172,7 @@ const Logo = () => {
                 width={30}
                 height={30}
             /> */}
-            <span className="font-medium text-black dark:text-white">BG Magic</span>
+            <span className="font-medium text-black dark:text-white">Background Magic</span>
         </Link>
     );
 };
