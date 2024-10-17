@@ -8,8 +8,11 @@ import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { AdditionalInfo } from '@/components/additional-info';
 import Link from 'next/link';
+import { FlipWords } from '@/components/ui/flip-words';
 
 const page = () => {
+    const words = ["text-behind-image", "stunning", "creative", "unique"];
+
     return ( 
         <div className='flex flex-col min-h-screen items-center w-full mt-20'>
             <HeroHighlight>
@@ -21,7 +24,7 @@ const page = () => {
                 >
                     Create {" "}
                     <Highlight className='text-white'>
-                        text-behind-image
+                        <FlipWords words={words} />
                     </Highlight>
                     {" "} designs easily
                 </motion.h1>
