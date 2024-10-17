@@ -23,8 +23,8 @@ const page = () => {
                     className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-bold text-black dark:text-white"
                 >
                     Create {" "}
-                    <Highlight className='text-white'>
-                        <FlipWords words={words} />
+                    <Highlight>
+                        <FlipWords className='text-white' words={words} />
                     </Highlight>
                     {" "} designs easily
                 </motion.h1>
@@ -43,9 +43,6 @@ const page = () => {
             </div>
             <div className="flex flex-col items-center justify-center my-10">
                 <AdditionalInfo />
-                <div className='text-2xl mt-10'>
-                    Created by <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>Rexan Wong</Link>         
-                </div> 
             </div>
         </div>
     );
