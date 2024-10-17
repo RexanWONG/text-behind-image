@@ -60,7 +60,7 @@ const Navbar = () => {
     ];
 
     return (
-        <div className="w-full">
+        <div className="w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black">
             <DesktopNav navItems={navItems} />
             <MobileNav navItems={navItems} />
         </div>
@@ -73,8 +73,8 @@ const DesktopNav = ({ navItems }: any) => {
         <motion.div
             onMouseLeave={() => { setHovered(null); }}
             className={cn(
-                "hidden lg:flex flex-row self-start bg-neutral-100  dark:bg-neutral-950 items-center justify-between py-2 max-w-7xl mx-auto px-4 rounded-full relative z-[60] w-full",
-                "sticky top-40 inset-x-0"
+                "hidden lg:flex flex-row self-start bg-neutral-100 dark:bg-neutral-950 items-center justify-between py-2 max-w-7xl mx-auto px-4 rounded-full relative z-[60] w-full",
+                "top-4"
             )}
         >
             <Logo />
