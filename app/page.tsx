@@ -54,10 +54,8 @@ const Page = () => {
 
 const Navbar = () => {
     const navItems = [
-        { name: "Work", link: "#" },
-        { name: "Services", link: "#" },
-        { name: "Pricing", link: "#" },
-        { name: "Contact", link: "#" },
+        { name: "text-behind-image", link: "/text-behind-image" },
+        { name: "Contact Us", link: "#" },
     ];
 
     return (
@@ -167,13 +165,13 @@ const Logo = () => {
             href="/"
             className="font-normal flex space-x-2 items-center text-sm mr-4  text-black px-2 py-1  relative z-20"
         >
-            <Image
+            {/* <Image
                 src="/logo-dark.png"  // Assuming you saved the image as logo-dark.png in the public folder
                 alt="logo"
                 width={30}
                 height={30}
-            />
-            <span className="font-medium text-black dark:text-white">DevStudio</span>
+            /> */}
+            <span className="font-medium text-black dark:text-white">BG Magic</span>
         </Link>
     );
 };
