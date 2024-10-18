@@ -133,7 +133,7 @@ export function TabsDemo() {
       title: "Text Behind Image",
       value: "text-behind-image",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
+        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-blue-500 to-purple-600">
           <p className="mb-4">Text Behind Image</p>
           <HeroImages />
         </div>
@@ -143,9 +143,18 @@ export function TabsDemo() {
       title: "Gradient Behind Image",
       value: "gradient-behind-image",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
+        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-pink-500 to-orange-500">
           <p className="mb-4">Gradient Behind Image</p>
           <HeroGradientParallaxImages />
+        </div>
+      ),
+    },
+    {
+      title: "More is coming soon...",
+      value: "more-is-coming-soon",
+      content: (
+        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-blue-500 to-purple-600">
+          <p className="mb-4">More is coming soon...</p>
         </div>
       ),
     },
