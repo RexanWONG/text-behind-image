@@ -231,7 +231,7 @@ const Page = () => {
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
 
                 // Measure text and truncate if necessary
-                const maxWidth = canvas.width * 0.9; // 90% of canvas width
+                const maxWidth = canvas.width * 1.0; // 90% of canvas width
                 let text = textSet.text;
                 let textWidth = ctx.measureText(text).width;
                 if (textWidth > maxWidth) {
