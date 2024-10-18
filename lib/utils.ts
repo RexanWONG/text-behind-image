@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { createNoise2D } from 'simplex-noise';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,4 +29,26 @@ export function generateHash(input: string): string {
 
   // Take the first 8 characters
   return paddedHash.slice(0, 8);
+}
+
+export function applyNoiseToGradient(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  noiseLevel: number
+): ImageData {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const noise2D = createNoise2D();
+  
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      const i = (y * width + x) * 4;
+      const noiseValue = noise2D(x / 10, y / 10) * (noiseLevel / 100);
+      imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + noiseValue * 255));
+      imageData.data[i+1] = Math.max(0, Math.min(255, imageData.data[i+1] + noiseValue * 255));
+      imageData.data[i+2] = Math.max(0, Math.min(255, imageData.data[i+2] + noiseValue * 255));
+    }
+  }
+  
+  return imageData;
 }

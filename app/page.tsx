@@ -51,12 +51,11 @@ const Page = () => {
         </div>
     );
 }
-
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const navItems = [
         { name: "Text Behind Image", link: "/text-behind-image" },
-        { name: "Gradient Behind Image", link: "#" },
+        { name: "Gradient Behind Image", link: "/gradient-behind-image" },
         { name: "Contact Us", link: "#" },
     ];
 
@@ -113,8 +112,8 @@ const DesktopNav = ({ navItems }: any) => {
                     </Link>
                 ))}
             </div>
-            <button className="hidden md:block px-8 py-2 text-sm font-bold rounded-full bg-black dark:bg-white dark:text-black  text-white shadow-[0px_-2px_0px_0px_rgba(255,255,255,0.4)_inset]">
-                X
+            <button className="hidden md:block px-8 py-2 text-lg font-bold rounded-full bg-black dark:bg-white dark:text-black  text-white shadow-[0px_-2px_0px_0px_rgba(255,255,255,0.4)_inset]">
+                𝕏
             </button>
         </motion.div>
     );
@@ -195,3 +194,4 @@ const Logo = () => {
 };
 
 export default Page;
+

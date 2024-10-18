@@ -1,4 +1,4 @@
-// app/app/page.tsx
+// app/gradient-behind-image/page.tsx
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -14,6 +14,9 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
+import { Slider } from "@/components/ui/slider";
+import { applyNoiseToGradient } from '@/lib/utils';
+import { Input } from "@/components/ui/input"; // Add this import
 
 const Page = () => {
     const { user } = useUser();
@@ -27,11 +30,61 @@ const Page = () => {
 
     const [color1, setColor1] = useState("#ff0000");
     const [color2, setColor2] = useState("#ffff00");
-    const [gradientStyle, setGradientStyle] = useState("");
+    const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+    const [gradientDataURL, setGradientDataURL] = useState<string | null>(null);
+
+    const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
+    const previewRef = useRef<HTMLDivElement>(null);
+
+    const [noiseLevel, setNoiseLevel] = useState(0);
+    const [noiseLevelInput, setNoiseLevelInput] = useState("0");
+
+    const [gradientCanvas, setGradientCanvas] = useState<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
-        setGradientStyle(`linear-gradient(to right, ${color1}, ${color2})`);
-    }, [color1, color2]);
+        if (previewRef.current) {
+            const { width, height } = previewRef.current.getBoundingClientRect();
+            setPreviewSize({ width, height });
+        }
+    }, [selectedImage]);
+
+    useEffect(() => {
+        if (imageSize.width && imageSize.height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = imageSize.width;
+            canvas.height = imageSize.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                // Check if color codes are valid
+                const isValidColor = (color: string) => /^#[0-9A-F]{6}$/i.test(color);
+                if (!isValidColor(color1) || !isValidColor(color2)) {
+                    console.error('Invalid color code');
+                    return;
+                }
+
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, color2);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                setGradientCanvas(canvas);
+            }
+        }
+    }, [color1, color2, imageSize]);
+
+    useEffect(() => {
+        if (gradientCanvas && noiseLevel > 0) {
+            const ctx = gradientCanvas.getContext('2d');
+            if (ctx) {
+                const noisyImageData = applyNoiseToGradient(ctx, gradientCanvas.width, gradientCanvas.height, noiseLevel);
+                ctx.putImageData(noisyImageData, 0, 0);
+                setGradientDataURL(gradientCanvas.toDataURL());
+            }
+        } else if (gradientCanvas) {
+            setGradientDataURL(gradientCanvas.toDataURL());
+        }
+    }, [gradientCanvas, noiseLevel]);
 
     const handleUploadImage = () => {
         if (fileInputRef.current) {
@@ -44,6 +97,11 @@ const Page = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
+            const img = document.createElement('img');
+            img.onload = () => {
+                setImageSize({ width: img.width, height: img.height });
+            };
+            img.src = imageUrl;
             await setupImage(imageUrl);
         }
     };
@@ -65,10 +123,12 @@ const Page = () => {
             id: newId,
             text: 'edit',
             fontFamily: 'Inter',
-            top: 0,
-            left: 0,
+            left: 50, // Center of the image (x-axis)
+            top: 50, // Center of the image (y-axis)
+            x: 50, // Center of the image (x-axis)
+            y: 50, // Center of the image (y-axis)
             color: 'white',
-            fontSize: 200,
+            fontSize: 5, // Percentage of image height
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -78,9 +138,18 @@ const Page = () => {
     };
 
     const handleAttributeChange = (id: number, attribute: string, value: any) => {
-        setTextSets(prev => prev.map(set => 
-            set.id === id ? { ...set, [attribute]: value } : set
-        ));
+        setTextSets(prev => prev.map(set => {
+            if (set.id === id) {
+                if (attribute === 'left') {
+                    return { ...set, x: value };
+                } else if (attribute === 'top') {
+                    return { ...set, y: value };
+                } else {
+                    return { ...set, [attribute]: value };
+                }
+            }
+            return set;
+        }));
     };
 
     const duplicateTextSet = (textSet: any) => {
@@ -93,57 +162,104 @@ const Page = () => {
     };
 
     const setRandomColors = () => {
-        const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16);
+        const randomColor = () => {
+            const hex = Math.floor(Math.random()*16777215).toString(16);
+            return '#' + '0'.repeat(6 - hex.length) + hex; // Ensure 6 digits
+        };
         setColor1(randomColor());
         setColor2(randomColor());
     };
 
+    const renderTextInPreview = (textSet: any) => {
+        const fontSize = (textSet.fontSize / 100) * previewSize.height;
+        const maxWidth = previewSize.width * 1.0; // 90% of preview width
+        return (
+            <div
+                key={textSet.id}
+                style={{
+                    position: 'absolute',
+                    top: `${textSet.y}%`,
+                    left: `${textSet.x}%`,
+                    transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                    color: textSet.color,
+                    textAlign: 'center',
+                    fontSize: `${fontSize}px`,
+                    fontWeight: textSet.fontWeight,
+                    fontFamily: textSet.fontFamily,
+                    opacity: textSet.opacity,
+                    zIndex: 3,
+                    maxWidth: `${maxWidth}px`,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                {textSet.text}
+            </div>
+        );
+    };
+
     const saveCompositeImage = () => {
-        if (!canvasRef.current || !isImageSetupDone) return;
-    
+        if (!canvasRef.current || !isImageSetupDone || !gradientDataURL) return;
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-    
-        // Create gradient background
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        gradient.addColorStop(0, color1);
-        gradient.addColorStop(1, color2);
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-        // Draw text
-        textSets.forEach(textSet => {
-            ctx.save(); // Save the current state
-            ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
-            ctx.fillStyle = textSet.color;
-            ctx.globalAlpha = textSet.opacity;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-    
-            const x = canvas.width * (textSet.left + 50) / 100;
-            const y = canvas.height * (50 - textSet.top) / 100;
-    
-            // Move the context to the text position and rotate
-            ctx.translate(x, y);
-            ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-            ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-            ctx.restore(); // Restore the original state
-        });
-    
-        if (removedBgImageUrl) {
-            const removedBgImg = new (window as any).Image();
-            removedBgImg.crossOrigin = "anonymous";
-            removedBgImg.onload = () => {
-                ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+
+        canvas.width = imageSize.width;
+        canvas.height = imageSize.height;
+
+        // Draw gradient background
+        const gradientImg = document.createElement('img');
+        gradientImg.onload = () => {
+            ctx.drawImage(gradientImg, 0, 0);
+            
+            // Draw text
+            textSets.forEach(textSet => {
+                ctx.save();
+                const fontSize = (textSet.fontSize / 100) * canvas.height;
+                ctx.font = `${textSet.fontWeight} ${fontSize}px ${textSet.fontFamily}`;
+                ctx.fillStyle = textSet.color;
+                ctx.globalAlpha = textSet.opacity;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const x = (textSet.x / 100) * canvas.width;
+                const y = (textSet.y / 100) * canvas.height;
+
+                ctx.translate(x, y);
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+
+                // Measure text and truncate if necessary
+                const maxWidth = canvas.width * 1.0; // 90% of canvas width
+                let text = textSet.text;
+                let textWidth = ctx.measureText(text).width;
+                if (textWidth > maxWidth) {
+                    while (textWidth > maxWidth && text.length > 0) {
+                        text = text.slice(0, -1);
+                        textWidth = ctx.measureText(text + '...').width;
+                    }
+                    text += '...';
+                }
+
+                ctx.fillText(text, 0, 0, maxWidth);
+                ctx.restore();
+            });
+
+            if (removedBgImageUrl) {
+                const removedBgImg = document.createElement('img');
+                removedBgImg.crossOrigin = "anonymous";
+                removedBgImg.onload = () => {
+                    ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+                    triggerDownload();
+                };
+                removedBgImg.src = removedBgImageUrl;
+            } else {
                 triggerDownload();
-            };
-            removedBgImg.src = removedBgImageUrl;
-        } else {
-            triggerDownload();
-        }
-    
+            }
+        };
+        gradientImg.src = gradientDataURL;
+
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -153,13 +269,38 @@ const Page = () => {
         }
     };
 
+    const handleNoiseLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setNoiseLevelInput(value);
+    };
+
+    const applyNoiseLevel = () => {
+        const numericValue = parseInt(noiseLevelInput, 10);
+        if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 100) {
+            setNoiseLevel(numericValue);
+        } else {
+            // Reset to the last valid value if input is invalid
+            setNoiseLevelInput(noiseLevel.toString());
+        }
+    };
+
+    const handleNoiseLevelKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            applyNoiseLevel();
+        }
+    };
+
+    const handleNoiseLevelBlur = () => {
+        applyNoiseLevel();
+    };
+
     return (
         <>
             {user && session && session.user ? (
                 <div className='flex flex-col min-h-screen'>
                     <div className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-2xl font-semibold tracking-tight">
-                            Text behind image editor
+                            Gradient behind image editor
                         </h2>
                         <div className='flex gap-4'>
                             <input
@@ -180,45 +321,35 @@ const Page = () => {
                     <Separator />
                     {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden" style={{ background: gradientStyle }}>
+                            <div ref={previewRef} className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
+                                {gradientDataURL && (
+                                    <Image
+                                        src={gradientDataURL}
+                                        alt="Gradient background"
+                                        layout="fill"
+                                        objectFit="contain"
+                                        style={{zIndex: 1}}
+                                    />
+                                )}
                                 {isImageSetupDone ? (
                                     <Image
                                         src={selectedImage} 
                                         alt="Uploaded"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
+                                        objectFit="contain"
+                                        style={{zIndex: 2, opacity: 0}}
                                     />
                                 ) : (
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
                                 )}
-                                {isImageSetupDone && textSets.map(textSet => (
-                                    <div
-                                        key={textSet.id}
-                                        style={{
-                                            position: 'absolute',
-                                            top: `${50 - textSet.top}%`,
-                                            left: `${textSet.left + 50}%`,
-                                            transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                                            color: textSet.color,
-                                            textAlign: 'center',
-                                            fontSize: `${textSet.fontSize}px`,
-                                            fontWeight: textSet.fontWeight,
-                                            fontFamily: textSet.fontFamily,
-                                            opacity: textSet.opacity
-                                        }}
-                                    >
-                                        {textSet.text}
-                                    </div>
-                                ))}
+                                {isImageSetupDone && textSets.map(renderTextInPreview)}
                                 {removedBgImageUrl && (
                                     <Image
                                         src={removedBgImageUrl}
                                         alt="Removed bg"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
-                                        className="absolute top-0 left-0 w-full h-full"
+                                        objectFit="contain"
+                                        style={{zIndex: 4}}
                                     /> 
                                 )}
                             </div>
@@ -238,13 +369,33 @@ const Page = () => {
                                         />
                                         <Button onClick={setRandomColors}>Random Colors</Button>
                                     </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="noise-input" className="text-sm font-medium">
+                                            Noise Level (0-100):
+                                        </label>
+                                        <Input
+                                            id="noise-input"
+                                            type="number"
+                                            min={0}
+                                            max={100}
+                                            value={noiseLevelInput}
+                                            onChange={handleNoiseLevelChange}
+                                            onKeyDown={handleNoiseLevelKeyDown}
+                                            onBlur={handleNoiseLevelBlur}
+                                            className="w-full"
+                                        />
+                                    </div>
                                 </div>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
                                         <TextCustomizer 
                                             key={textSet.id}
-                                            textSet={textSet}
+                                            textSet={{
+                                                ...textSet,
+                                                left: textSet.x,
+                                                top: textSet.y
+                                            }}
                                             handleAttributeChange={handleAttributeChange}
                                             removeTextSet={removeTextSet}
                                             duplicateTextSet={duplicateTextSet}
