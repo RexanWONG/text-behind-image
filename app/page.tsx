@@ -35,7 +35,7 @@ const Page = () => {
                         {" "} designs easily
                     </motion.h1>
                 </HeroHighlight>
-                <Link href={'/text-behind-image'} className='mb-10'>
+                <Link href={'/gradient-behind-image'} className='mb-10'>
                     <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
                         Open the app
                     </HoverBorderGradient>
@@ -55,7 +55,6 @@ const Navbar = () => {
     const navItems = [
         { name: "Text Behind Image", link: "/text-behind-image" },
         { name: "Gradient Behind Image", link: "/gradient-behind-image" },
-        { name: "Contact Us", link: "#" },
     ];
 
     useEffect(() => {

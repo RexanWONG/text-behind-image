@@ -17,6 +17,7 @@ import '@/app/fonts.css'
 import { Slider } from "@/components/ui/slider";
 import { applyNoiseToGradient } from '@/lib/utils';
 import { Input } from "@/components/ui/input"; // Add this import
+import { HeroGradientParallaxImages } from '@/components/hero-gradient-parallax-images';
 
 const Page = () => {
     const { user } = useUser();
@@ -410,8 +411,9 @@ const Page = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className='flex items-center justify-center min-h-screen w-full'>
-                            <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
+                        <div className='flex flex-col items-center justify-center min-h-screen w-full'>
+                            <h2 className="text-xl font-semibold mb-8">Welcome, get started by uploading an image!</h2>
+                            <HeroGradientParallaxImages />
                         </div>
                     )}
                 </div>
