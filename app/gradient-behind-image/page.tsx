@@ -150,6 +150,7 @@ const Page = () => {
 
     const renderTextInPreview = (textSet: any) => {
         const fontSize = (textSet.fontSize / 100) * previewSize.height;
+        const maxWidth = previewSize.width * 1.0; // 90% of preview width
         return (
             <div
                 key={textSet.id}
@@ -164,7 +165,11 @@ const Page = () => {
                     fontWeight: textSet.fontWeight,
                     fontFamily: textSet.fontFamily,
                     opacity: textSet.opacity,
-                    zIndex: 3
+                    zIndex: 3,
+                    maxWidth: `${maxWidth}px`,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
                 }}
             >
                 {textSet.text}
@@ -202,7 +207,20 @@ const Page = () => {
 
                 ctx.translate(x, y);
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
-                ctx.fillText(textSet.text, 0, 0);
+
+                // Measure text and truncate if necessary
+                const maxWidth = canvas.width * 0.9; // 90% of canvas width
+                let text = textSet.text;
+                let textWidth = ctx.measureText(text).width;
+                if (textWidth > maxWidth) {
+                    while (textWidth > maxWidth && text.length > 0) {
+                        text = text.slice(0, -1);
+                        textWidth = ctx.measureText(text + '...').width;
+                    }
+                    text += '...';
+                }
+
+                ctx.fillText(text, 0, 0, maxWidth);
                 ctx.restore();
             });
 
