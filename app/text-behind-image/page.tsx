@@ -1,7 +1,7 @@
-// app/app/page.tsx
+// app/gradient-behind-image/page.tsx
 'use client'
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useUser } from '@/hooks/useUser';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
@@ -14,6 +14,8 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
+import { HeroGradientParallaxImages } from '@/components/hero-gradient-parallax-images';
+import { HeroImages } from '@/components/hero-images';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 
 const Page = () => {
@@ -26,6 +28,18 @@ const Page = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
+    const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+
+    const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
+    const previewRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (previewRef.current) {
+            const { width, height } = previewRef.current.getBoundingClientRect();
+            setPreviewSize({ width, height });
+        }
+    }, [selectedImage]);
+
     const handleUploadImage = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -37,6 +51,11 @@ const Page = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
+            const img = document.createElement('img');
+            img.onload = () => {
+                setImageSize({ width: img.width, height: img.height });
+            };
+            img.src = imageUrl;
             await setupImage(imageUrl);
         }
     };
@@ -58,10 +77,12 @@ const Page = () => {
             id: newId,
             text: 'edit',
             fontFamily: 'Inter',
-            top: 0,
-            left: 0,
+            left: 50, // Center of the image (x-axis)
+            top: 50, // Center of the image (y-axis)
+            x: 50, // Center of the image (x-axis)
+            y: 50, // Center of the image (y-axis)
             color: 'white',
-            fontSize: 200,
+            fontSize: 5, // Percentage of image height
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -71,9 +92,18 @@ const Page = () => {
     };
 
     const handleAttributeChange = (id: number, attribute: string, value: any) => {
-        setTextSets(prev => prev.map(set => 
-            set.id === id ? { ...set, [attribute]: value } : set
-        ));
+        setTextSets(prev => prev.map(set => {
+            if (set.id === id) {
+                if (attribute === 'left') {
+                    return { ...set, x: value };
+                } else if (attribute === 'top') {
+                    return { ...set, y: value };
+                } else {
+                    return { ...set, [attribute]: value };
+                }
+            }
+            return set;
+        }));
     };
 
     const duplicateTextSet = (textSet: any) => {
@@ -85,41 +115,84 @@ const Page = () => {
         setTextSets(prev => prev.filter(set => set.id !== id));
     };
 
+    const renderTextInPreview = (textSet: any) => {
+        const fontSize = (textSet.fontSize / 100) * previewSize.height;
+        const maxWidth = previewSize.width * 1.0; // 90% of preview width
+        return (
+            <div
+                key={textSet.id}
+                style={{
+                    position: 'absolute',
+                    top: `${textSet.y}%`,
+                    left: `${textSet.x}%`,
+                    transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                    color: textSet.color,
+                    textAlign: 'center',
+                    fontSize: `${fontSize}px`,
+                    fontWeight: textSet.fontWeight,
+                    fontFamily: textSet.fontFamily,
+                    opacity: textSet.opacity,
+                    zIndex: 3,
+                    maxWidth: `${maxWidth}px`,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                {textSet.text}
+            </div>
+        );
+    };
+
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone) return;
-    
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-    
-        const bgImg = new (window as any).Image();
-        bgImg.crossOrigin = "anonymous";
-        bgImg.onload = () => {
-            canvas.width = bgImg.width;
-            canvas.height = bgImg.height;
-    
-            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-    
+
+        canvas.width = imageSize.width;
+        canvas.height = imageSize.height;
+
+        // Draw the original image
+        const originalImg = document.createElement('img');
+        originalImg.onload = () => {
+            ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+            
+            // Draw text
             textSets.forEach(textSet => {
-                ctx.save(); // Save the current state
-                ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
+                ctx.save();
+                const fontSize = (textSet.fontSize / 100) * canvas.height;
+                ctx.font = `${textSet.fontWeight} ${fontSize}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-    
-                const x = canvas.width * (textSet.left + 50) / 100;
-                const y = canvas.height * (50 - textSet.top) / 100;
-    
-                // Move the context to the text position and rotate
+
+                const x = (textSet.x / 100) * canvas.width;
+                const y = (textSet.y / 100) * canvas.height;
+
                 ctx.translate(x, y);
-                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-                ctx.restore(); // Restore the original state
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+
+                // Measure text and truncate if necessary
+                const maxWidth = canvas.width * 1.0; // 90% of canvas width
+                let text = textSet.text;
+                let textWidth = ctx.measureText(text).width;
+                if (textWidth > maxWidth) {
+                    while (textWidth > maxWidth && text.length > 0) {
+                        text = text.slice(0, -1);
+                        textWidth = ctx.measureText(text + '...').width;
+                    }
+                    text += '...';
+                }
+
+                ctx.fillText(text, 0, 0, maxWidth);
+                ctx.restore();
             });
-    
+
             if (removedBgImageUrl) {
-                const removedBgImg = new (window as any).Image();
+                const removedBgImg = document.createElement('img');
                 removedBgImg.crossOrigin = "anonymous";
                 removedBgImg.onload = () => {
                     ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
@@ -130,8 +203,8 @@ const Page = () => {
                 triggerDownload();
             }
         };
-        bgImg.src = selectedImage || '';
-    
+        originalImg.src = selectedImage || '';
+
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -168,45 +241,26 @@ const Page = () => {
                     <Separator />
                     {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
+                            <div ref={previewRef} className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {isImageSetupDone ? (
                                     <Image
                                         src={selectedImage} 
                                         alt="Uploaded"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
+                                        objectFit="contain"
+                                        style={{zIndex: 1}}
                                     />
                                 ) : (
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
                                 )}
-                                {isImageSetupDone && textSets.map(textSet => (
-                                    <div
-                                        key={textSet.id}
-                                        style={{
-                                            position: 'absolute',
-                                            top: `${50 - textSet.top}%`,
-                                            left: `${textSet.left + 50}%`,
-                                            transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                                            color: textSet.color,
-                                            textAlign: 'center',
-                                            fontSize: `${textSet.fontSize}px`,
-                                            fontWeight: textSet.fontWeight,
-                                            fontFamily: textSet.fontFamily,
-                                            opacity: textSet.opacity
-                                        }}
-                                    >
-                                        {textSet.text}
-                                    </div>
-                                ))}
+                                {isImageSetupDone && textSets.map(renderTextInPreview)}
                                 {removedBgImageUrl && (
                                     <Image
                                         src={removedBgImageUrl}
                                         alt="Removed bg"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
-                                        className="absolute top-0 left-0 w-full h-full"
+                                        objectFit="contain"
+                                        style={{zIndex: 3}}
                                     /> 
                                 )}
                             </div>
@@ -216,7 +270,11 @@ const Page = () => {
                                     {textSets.map(textSet => (
                                         <TextCustomizer 
                                             key={textSet.id}
-                                            textSet={textSet}
+                                            textSet={{
+                                                ...textSet,
+                                                left: textSet.x,
+                                                top: textSet.y
+                                            }}
                                             handleAttributeChange={handleAttributeChange}
                                             removeTextSet={removeTextSet}
                                             duplicateTextSet={duplicateTextSet}
@@ -231,8 +289,8 @@ const Page = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className='flex flex-col items-center justify-center min-h-screen w-full overflow-y-auto'>
-                            <h2 className="text-xl font-semibold mb-3 mt-10">Welcome, get started by uploading an image!</h2>
+                        <div className='flex flex-col items-center justify-center min-h-screen w-full'>
+                            <h2 className="text-xl font-semibold mt-10">Welcome, get started by uploading an image!</h2>
                             <HeroParallaxImages />
                         </div>
                     )}
