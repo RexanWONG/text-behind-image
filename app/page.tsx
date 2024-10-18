@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
 const Page = () => {
-    const words = ["text-behind-image", "stunning", "creative", "unique"];
+    const words = ["text-behind-image", "gradient-bg", "stunning", "creative", "unique"];
 
     return (
         <div className='flex flex-col min-h-screen items-center w-full mt-10'>
