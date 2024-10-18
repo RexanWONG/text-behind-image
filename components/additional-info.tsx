@@ -16,10 +16,14 @@ export function AdditionalInfo() {
         <Link href={'https://github.com/YilangHe/text-behind-image'} target="_blank" rel="noopener noreferrer">
             <div className="max-w-xs">
                 <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-                    Text behind image is Open Source 
+                    Background Magic is Open Source 
                 </h2>
                 <p className="mt-4 text-left  text-base/6 text-neutral-200">
-                    100% of the code of the app is public on Github - check it out & contribute!
+                    This project is a fork of Text Behind Image by Rexan Wong.
+                    
+                </p>
+                <p className="mt-4 text-left  text-base/6 text-neutral-200">
+                  100% of the code of the app is public on Github - check it out & contribute!
                 </p>
             </div>
                 <Image
