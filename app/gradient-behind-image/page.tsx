@@ -30,6 +30,16 @@ const Page = () => {
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const [gradientDataURL, setGradientDataURL] = useState<string | null>(null);
 
+    const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
+    const previewRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (previewRef.current) {
+            const { width, height } = previewRef.current.getBoundingClientRect();
+            setPreviewSize({ width, height });
+        }
+    }, [selectedImage]);
+
     useEffect(() => {
         if (imageSize.width && imageSize.height) {
             const canvas = document.createElement('canvas');
@@ -91,10 +101,10 @@ const Page = () => {
             id: newId,
             text: 'edit',
             fontFamily: 'Inter',
-            top: 0,
-            left: 0,
+            x: 50, // Center of the image
+            y: 50, // Center of the image
             color: 'white',
-            fontSize: 200,
+            fontSize: 5, // Percentage of image height
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -127,6 +137,30 @@ const Page = () => {
         setColor2(randomColor());
     };
 
+    const renderTextInPreview = (textSet: any) => {
+        const fontSize = (textSet.fontSize / 100) * previewSize.height;
+        return (
+            <div
+                key={textSet.id}
+                style={{
+                    position: 'absolute',
+                    top: `${textSet.y}%`,
+                    left: `${textSet.x}%`,
+                    transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                    color: textSet.color,
+                    textAlign: 'center',
+                    fontSize: `${fontSize}px`,
+                    fontWeight: textSet.fontWeight,
+                    fontFamily: textSet.fontFamily,
+                    opacity: textSet.opacity,
+                    zIndex: 3
+                }}
+            >
+                {textSet.text}
+            </div>
+        );
+    };
+
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone || !gradientDataURL) return;
 
@@ -145,21 +179,22 @@ const Page = () => {
             // Draw text
             textSets.forEach(textSet => {
                 ctx.save();
-                ctx.font = `${textSet.fontWeight} ${textSet.fontSize}px ${textSet.fontFamily}`;
+                const fontSize = (textSet.fontSize / 100) * canvas.height;
+                ctx.font = `${textSet.fontWeight} ${fontSize}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-    
-                const x = canvas.width * (textSet.left + 50) / 100;
-                const y = canvas.height * (50 - textSet.top) / 100;
-    
+
+                const x = (textSet.x / 100) * canvas.width;
+                const y = (textSet.y / 100) * canvas.height;
+
                 ctx.translate(x, y);
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
                 ctx.fillText(textSet.text, 0, 0);
                 ctx.restore();
             });
-    
+
             if (removedBgImageUrl) {
                 const removedBgImg = document.createElement('img');
                 removedBgImg.crossOrigin = "anonymous";
@@ -210,54 +245,35 @@ const Page = () => {
                     <Separator />
                     {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
+                            <div ref={previewRef} className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {gradientDataURL && (
                                     <Image
                                         src={gradientDataURL}
                                         alt="Gradient background"
-                                        width={imageSize.width}
-                                        height={imageSize.height}
-                                        style={{position: 'absolute', top: 0, left: 0, zIndex: 1}}
+                                        layout="fill"
+                                        objectFit="contain"
+                                        style={{zIndex: 1}}
                                     />
                                 )}
                                 {isImageSetupDone ? (
                                     <Image
                                         src={selectedImage} 
                                         alt="Uploaded"
-                                        width={imageSize.width}
-                                        height={imageSize.height}
-                                        style={{position: 'relative', zIndex: 2, opacity: 0}}
+                                        layout="fill"
+                                        objectFit="contain"
+                                        style={{zIndex: 2, opacity: 0}}
                                     />
                                 ) : (
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
                                 )}
-                                {isImageSetupDone && textSets.map(textSet => (
-                                    <div
-                                        key={textSet.id}
-                                        style={{
-                                            position: 'absolute',
-                                            top: `${50 - textSet.top}%`,
-                                            left: `${textSet.left + 50}%`,
-                                            transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                                            color: textSet.color,
-                                            textAlign: 'center',
-                                            fontSize: `${textSet.fontSize}px`,
-                                            fontWeight: textSet.fontWeight,
-                                            fontFamily: textSet.fontFamily,
-                                            opacity: textSet.opacity,
-                                            zIndex: 3
-                                        }}
-                                    >
-                                        {textSet.text}
-                                    </div>
-                                ))}
+                                {isImageSetupDone && textSets.map(renderTextInPreview)}
                                 {removedBgImageUrl && (
                                     <Image
                                         src={removedBgImageUrl}
                                         alt="Removed bg"
-                                        width={imageSize.width}
-                                        height={imageSize.height}
-                                        style={{position: 'absolute', top: 0, left: 0, zIndex: 4}}
+                                        layout="fill"
+                                        objectFit="contain"
+                                        style={{zIndex: 4}}
                                     /> 
                                 )}
                             </div>
