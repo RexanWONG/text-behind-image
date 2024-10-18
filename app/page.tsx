@@ -12,6 +12,7 @@ import { FlipWords } from '@/components/ui/flip-words';
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import { TabsDemo } from '@/components/ui/animated-tab'; // Import the new TabsDemo component
 
 const Page = () => {
     const words = ["text-behind-image", "gradient-bg", "stunning", "creative", "unique"];
@@ -19,33 +20,27 @@ const Page = () => {
     return (
         <div className='flex flex-col min-h-screen items-center w-full mt-10'>
             <Navbar />
-                <HeroHighlight className='mt-10'>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }} 
-                        animate={{ opacity: 1, y: [20, -5, 0] }} 
-                        transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
-                        className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-bold text-black dark:text-white"
-                    >
-                        Create {" "}
-                        <Highlight>
-                            <span className="inline-block w-[470px] px-4 py-2">
-                                <FlipWords className='text-white' words={words} />
-                            </span>
-                        </Highlight>
-                        {" "} designs easily
-                    </motion.h1>
-                </HeroHighlight>
-                <Link href={'/gradient-behind-image'} className='mb-10'>
-                    <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
-                        Open the app
-                    </HoverBorderGradient>
-                </Link>
-                
-                <div className='w-full h-full mt-2'>
-                    <HeroImages />
-                </div>
-                <div className="flex flex-col items-center justify-center my-10">
-                    <AdditionalInfo />
+            <HeroHighlight className='mt-10'>
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: [20, -5, 0] }} 
+                    transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
+                    className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-bold text-black dark:text-white"
+                >
+                    Create {" "}
+                    <Highlight>
+                        <span className="inline-block w-[470px] px-4 py-2">
+                            <FlipWords className='text-white' words={words} />
+                        </span>
+                    </Highlight>
+                    {" "} designs easily
+                </motion.h1>
+            </HeroHighlight>
+            
+            <TabsDemo />
+            
+            <div className="flex flex-col items-center justify-center my-10">
+                <AdditionalInfo />
             </div>
         </div>
     );
