@@ -112,9 +112,9 @@ const DesktopNav = ({ navItems }: any) => {
                     </Link>
                 ))}
             </div>
-            <button className="hidden md:block px-8 py-2 text-lg font-bold rounded-full bg-black dark:bg-white dark:text-black  text-white shadow-[0px_-2px_0px_0px_rgba(255,255,255,0.4)_inset]">
-                𝕏
-            </button>
+            <Link href="https://x.com/himrnoodles" target="_blank" rel="noopener noreferrer" className="hidden md:block px-8 py-2 text-lg font-bold rounded-full bg-black dark:bg-white dark:text-black text-white shadow-[0px_-2px_0px_0px_rgba(255,255,255,0.4)_inset]">
+                    𝕏
+            </Link>
         </motion.div>
     );
 };
@@ -166,7 +166,7 @@ const MobileNav = ({ navItems }: any) => {
                                 </Link>
                             ))}
                             <button className="px-8 py-2 w-full rounded-lg bg-black dark:bg-white dark:text-black font-medium text-white shadow-[0px_-2px_0px_0px_rgba(255,255,255,0.4)_inset]">
-                                Book a call
+                                X
                             </button>
                         </motion.div>
                     )}
@@ -194,4 +194,3 @@ const Logo = () => {
 };
 
 export default Page;
-
