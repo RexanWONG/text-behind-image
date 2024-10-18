@@ -20,16 +20,16 @@ const Page = () => {
     return (
         <div className='flex flex-col min-h-screen items-center w-full mt-10'>
             <Navbar />
-            <HeroHighlight className='mt-10'>
+            <HeroHighlight className='mt-10 px-4 sm:px-6 lg:px-8'>
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: [20, -5, 0] }} 
                     transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
-                    className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-bold text-black dark:text-white"
+                    className="text-2xl sm:text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-bold text-black dark:text-white"
                 >
                     Create {" "}
                     <Highlight>
-                        <span className="inline-block w-[470px] px-4 py-2">
+                        <span className="inline-block w-full sm:w-[470px] px-2 sm:px-4 py-2">
                             <FlipWords className='text-white' words={words} />
                         </span>
                     </Highlight>
@@ -37,9 +37,11 @@ const Page = () => {
                 </motion.h1>
             </HeroHighlight>
             
-            <TabsDemo />
+            <div className="w-full px-4 sm:px-6 lg:px-8">
+                <TabsDemo />
+            </div>
             
-            <div className="flex flex-col items-center justify-center my-10">
+            <div className="flex flex-col items-center justify-center my-10 px-4 sm:px-6 lg:px-8 w-full">
                 <AdditionalInfo />
             </div>
         </div>
@@ -122,7 +124,7 @@ const MobileNav = ({ navItems }: any) => {
                     borderRadius: open ? "4px" : "2rem",
                 }}
                 key={String(open)}
-                className="flex relative flex-col lg:hidden w-full justify-between items-center bg-white dark:bg-neutral-950  max-w-[calc(100vw-2rem)] mx-auto px-4 py-2"
+                className="flex relative flex-col lg:hidden w-full justify-between items-center bg-white dark:bg-neutral-950 max-w-[calc(100vw-1rem)] mx-auto px-4 py-2"
             >
                 <div className="flex flex-row justify-between items-center w-full">
                     <Logo />
