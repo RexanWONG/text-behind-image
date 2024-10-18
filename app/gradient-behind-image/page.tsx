@@ -101,8 +101,10 @@ const Page = () => {
             id: newId,
             text: 'edit',
             fontFamily: 'Inter',
-            x: 50, // Center of the image
-            y: 50, // Center of the image
+            left: 50, // Center of the image (x-axis)
+            top: 50, // Center of the image (y-axis)
+            x: 50, // Center of the image (x-axis)
+            y: 50, // Center of the image (y-axis)
             color: 'white',
             fontSize: 5, // Percentage of image height
             fontWeight: 800,
@@ -114,9 +116,18 @@ const Page = () => {
     };
 
     const handleAttributeChange = (id: number, attribute: string, value: any) => {
-        setTextSets(prev => prev.map(set => 
-            set.id === id ? { ...set, [attribute]: value } : set
-        ));
+        setTextSets(prev => prev.map(set => {
+            if (set.id === id) {
+                if (attribute === 'left') {
+                    return { ...set, x: value };
+                } else if (attribute === 'top') {
+                    return { ...set, y: value };
+                } else {
+                    return { ...set, [attribute]: value };
+                }
+            }
+            return set;
+        }));
     };
 
     const duplicateTextSet = (textSet: any) => {
@@ -299,7 +310,11 @@ const Page = () => {
                                     {textSets.map(textSet => (
                                         <TextCustomizer 
                                             key={textSet.id}
-                                            textSet={textSet}
+                                            textSet={{
+                                                ...textSet,
+                                                left: textSet.x,
+                                                top: textSet.y
+                                            }}
                                             handleAttributeChange={handleAttributeChange}
                                             removeTextSet={removeTextSet}
                                             duplicateTextSet={duplicateTextSet}
