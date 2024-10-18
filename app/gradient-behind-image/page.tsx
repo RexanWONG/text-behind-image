@@ -272,11 +272,26 @@ const Page = () => {
     const handleNoiseLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setNoiseLevelInput(value);
-        
-        const numericValue = parseInt(value, 10);
+    };
+
+    const applyNoiseLevel = () => {
+        const numericValue = parseInt(noiseLevelInput, 10);
         if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 100) {
             setNoiseLevel(numericValue);
+        } else {
+            // Reset to the last valid value if input is invalid
+            setNoiseLevelInput(noiseLevel.toString());
         }
+    };
+
+    const handleNoiseLevelKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            applyNoiseLevel();
+        }
+    };
+
+    const handleNoiseLevelBlur = () => {
+        applyNoiseLevel();
     };
 
     return (
@@ -365,6 +380,8 @@ const Page = () => {
                                             max={100}
                                             value={noiseLevelInput}
                                             onChange={handleNoiseLevelChange}
+                                            onKeyDown={handleNoiseLevelKeyDown}
+                                            onBlur={handleNoiseLevelBlur}
                                             className="w-full"
                                         />
                                     </div>
