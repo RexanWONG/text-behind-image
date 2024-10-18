@@ -14,6 +14,9 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
+import { Slider } from "@/components/ui/slider";
+import { applyNoiseToGradient } from '@/lib/utils';
+import { Input } from "@/components/ui/input"; // Add this import
 
 const Page = () => {
     const { user } = useUser();
@@ -32,6 +35,11 @@ const Page = () => {
 
     const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
     const previewRef = useRef<HTMLDivElement>(null);
+
+    const [noiseLevel, setNoiseLevel] = useState(0);
+    const [noiseLevelInput, setNoiseLevelInput] = useState("0");
+
+    const [gradientCanvas, setGradientCanvas] = useState<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
         if (previewRef.current) {
@@ -59,10 +67,24 @@ const Page = () => {
                 gradient.addColorStop(1, color2);
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                setGradientDataURL(canvas.toDataURL());
+
+                setGradientCanvas(canvas);
             }
         }
     }, [color1, color2, imageSize]);
+
+    useEffect(() => {
+        if (gradientCanvas && noiseLevel > 0) {
+            const ctx = gradientCanvas.getContext('2d');
+            if (ctx) {
+                const noisyImageData = applyNoiseToGradient(ctx, gradientCanvas.width, gradientCanvas.height, noiseLevel);
+                ctx.putImageData(noisyImageData, 0, 0);
+                setGradientDataURL(gradientCanvas.toDataURL());
+            }
+        } else if (gradientCanvas) {
+            setGradientDataURL(gradientCanvas.toDataURL());
+        }
+    }, [gradientCanvas, noiseLevel]);
 
     const handleUploadImage = () => {
         if (fileInputRef.current) {
@@ -247,6 +269,16 @@ const Page = () => {
         }
     };
 
+    const handleNoiseLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setNoiseLevelInput(value);
+        
+        const numericValue = parseInt(value, 10);
+        if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 100) {
+            setNoiseLevel(numericValue);
+        }
+    };
+
     return (
         <>
             {user && session && session.user ? (
@@ -321,6 +353,20 @@ const Page = () => {
                                             onChange={(e) => setColor2(e.target.value)}
                                         />
                                         <Button onClick={setRandomColors}>Random Colors</Button>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="noise-input" className="text-sm font-medium">
+                                            Noise Level (0-100):
+                                        </label>
+                                        <Input
+                                            id="noise-input"
+                                            type="number"
+                                            min={0}
+                                            max={100}
+                                            value={noiseLevelInput}
+                                            onChange={handleNoiseLevelChange}
+                                            className="w-full"
+                                        />
                                     </div>
                                 </div>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
