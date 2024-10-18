@@ -43,7 +43,6 @@ const Page = () => {
                 
                 <div className='w-full h-full mt-2'>
                     <HeroImages />
-                    <HeroParallaxImages />
                 </div>
                 <div className="flex flex-col items-center justify-center my-10">
                     <AdditionalInfo />

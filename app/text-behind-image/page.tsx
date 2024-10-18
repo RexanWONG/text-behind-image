@@ -14,6 +14,7 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
+import { HeroParallaxImages } from '@/components/hero-parallax-images';
 
 const Page = () => {
     const { user } = useUser();
@@ -230,8 +231,9 @@ const Page = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className='flex items-center justify-center min-h-screen w-full'>
-                            <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
+                        <div className='flex flex-col items-center justify-center min-h-screen w-full overflow-y-auto'>
+                            <h2 className="text-xl font-semibold mb-3 mt-10">Welcome, get started by uploading an image!</h2>
+                            <HeroParallaxImages />
                         </div>
                     )}
                 </div>
