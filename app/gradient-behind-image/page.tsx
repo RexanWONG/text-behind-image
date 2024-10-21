@@ -42,6 +42,9 @@ const Page = () => {
 
     const [gradientCanvas, setGradientCanvas] = useState<HTMLCanvasElement | null>(null);
 
+    // Add this new state to track if the gradient is ready
+    const [isGradientReady, setIsGradientReady] = useState(false);
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -50,7 +53,7 @@ const Page = () => {
     }, [selectedImage]);
 
     useEffect(() => {
-        if (imageSize.width && imageSize.height) {
+        if (isImageSetupDone && imageSize.width && imageSize.height) {
             const canvas = document.createElement('canvas');
             canvas.width = imageSize.width;
             canvas.height = imageSize.height;
@@ -70,9 +73,10 @@ const Page = () => {
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 setGradientCanvas(canvas);
+                setIsGradientReady(true);
             }
         }
-    }, [color1, color2, imageSize]);
+    }, [color1, color2, imageSize, isImageSetupDone]);
 
     useEffect(() => {
         if (gradientCanvas && noiseLevel > 0) {
@@ -129,7 +133,7 @@ const Page = () => {
             x: 50, // Center of the image (x-axis)
             y: 50, // Center of the image (y-axis)
             color: 'white',
-            fontSize: 5, // Percentage of image height
+            fontSize: 30, // Percentage of image height
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -173,7 +177,7 @@ const Page = () => {
 
     const renderTextInPreview = (textSet: any) => {
         const fontSize = (textSet.fontSize / 100) * previewSize.height;
-        const maxWidth = previewSize.width * 1.0; // 90% of preview width
+        const maxWidth = previewSize.width * 1.5; // 150% of preview width
         return (
             <div
                 key={textSet.id}
@@ -232,7 +236,7 @@ const Page = () => {
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
 
                 // Measure text and truncate if necessary
-                const maxWidth = canvas.width * 1.0; // 90% of canvas width
+                const maxWidth = canvas.width * 1.5; // 150% of canvas width
                 let text = textSet.text;
                 let textWidth = ctx.measureText(text).width;
                 if (textWidth > maxWidth) {
@@ -323,7 +327,7 @@ const Page = () => {
                     {selectedImage ? (
                         <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
                             <div ref={previewRef} className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
-                                {gradientDataURL && (
+                                {isGradientReady && gradientDataURL && (
                                     <Image
                                         src={gradientDataURL}
                                         alt="Gradient background"
