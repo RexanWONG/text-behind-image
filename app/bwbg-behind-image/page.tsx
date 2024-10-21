@@ -18,6 +18,7 @@ import { HeroGradientParallaxImages } from '@/components/hero-gradient-parallax-
 import { HeroImages } from '@/components/hero-images';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { Slider } from "@/components/ui/slider";
+import Link from 'next/link';
 
 const Page = () => {
     const { user } = useUser();
@@ -265,7 +266,9 @@ const Page = () => {
                 <div className='flex flex-col min-h-screen'>
                     <div className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-2xl font-semibold tracking-tight">
-                            BWBG behind image editor
+                            <Link href="/">
+                                BWBG behind image editor
+                            </Link>
                         </h2>
                         <div className='flex gap-4'>
                             <input

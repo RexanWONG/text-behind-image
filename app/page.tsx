@@ -52,6 +52,7 @@ const Navbar = () => {
     const navItems = [
         { name: "Text Behind Image", link: "/text-behind-image" },
         { name: "Gradient Behind Image", link: "/gradient-behind-image" },
+        { name: "BWBG Behind Image", link: "/bwbg-behind-image" },
     ];
 
     useEffect(() => {
