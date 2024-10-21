@@ -49,6 +49,9 @@ const Page = () => {
     // Add this new state for the gradient angle
     const [gradientAngle, setGradientAngle] = useState(0);
 
+    // Add this new state for the temporary gradient angle during slider interaction
+    const [tempGradientAngle, setTempGradientAngle] = useState(0);
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -310,9 +313,23 @@ const Page = () => {
         applyNoiseLevel();
     };
 
-    // Add this function to handle gradient angle change
+    // Modify the handleGradientAngleChange function
     const handleGradientAngleChange = (value: number[]) => {
+        setTempGradientAngle(value[0]);
+    };
+
+    // Add this new function to handle the end of slider interaction
+    const handleGradientAngleChangeEnd = (value: number[]) => {
         setGradientAngle(value[0]);
+    };
+
+    // Add this new function to handle direct input of gradient angle
+    const handleGradientAngleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.target.value, 10);
+        if (!isNaN(value) && value >= 0 && value <= 360) {
+            setGradientAngle(value);
+            setTempGradientAngle(value);
+        }
     };
 
     return (
@@ -393,16 +410,28 @@ const Page = () => {
                                         <Button onClick={setRandomColors}>Random Colors</Button>
                                     </div>
                                     <div className="flex flex-col gap-2 mb-4">
-                                        <label htmlFor="gradient-angle" className="text-sm font-medium">
-                                            Gradient Angle: {gradientAngle}°
-                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <label htmlFor="gradient-angle" className="text-sm font-medium">
+                                                Gradient Angle:
+                                            </label>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={360}
+                                                value={gradientAngle}
+                                                onChange={handleGradientAngleInput}
+                                                className="w-20"
+                                            />
+                                            <span className="text-sm">°</span>
+                                        </div>
                                         <Slider
                                             id="gradient-angle"
                                             min={0}
                                             max={360}
                                             step={1}
-                                            value={[gradientAngle]}
+                                            value={[tempGradientAngle]}
                                             onValueChange={handleGradientAngleChange}
+                                            onValueCommit={handleGradientAngleChangeEnd}
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
