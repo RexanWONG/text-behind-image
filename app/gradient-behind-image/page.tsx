@@ -394,6 +394,7 @@ const Page = () => {
                                         />
                                     </div>
                                 </div>
+                                <h3 className="text-lg font-semibold mb-2">Text Set</h3>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
