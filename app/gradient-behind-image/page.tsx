@@ -18,6 +18,7 @@ import { Slider } from "@/components/ui/slider";
 import { applyNoiseToGradient } from '@/lib/utils';
 import { Input } from "@/components/ui/input"; // Add this import
 import { HeroGradientParallaxImages } from '@/components/hero-gradient-parallax-images';
+import Link from 'next/link';
 
 const Page = () => {
     const { user } = useUser();
@@ -304,9 +305,11 @@ const Page = () => {
             {user && session && session.user ? (
                 <div className='flex flex-col min-h-screen'>
                     <div className='flex flex-row items-center justify-between p-5 px-10'>
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            Gradient behind image editor
-                        </h2>
+                        <Link href="/" className="hover:underline">
+                            <h2 className="text-2xl font-semibold tracking-tight">
+                                Gradient behind image editor
+                            </h2>
+                        </Link>
                         <div className='flex gap-4'>
                             <input
                                 type="file"
