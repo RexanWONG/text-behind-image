@@ -265,7 +265,7 @@ const Page = () => {
                 <div className='flex flex-col min-h-screen'>
                     <div className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-2xl font-semibold tracking-tight">
-                            Text behind image editor
+                            BWBG behind image editor
                         </h2>
                         <div className='flex gap-4'>
                             <input
@@ -315,6 +315,7 @@ const Page = () => {
                                 )}
                             </div>
                             <div className='flex flex-col w-full'>
+                            <h3 className="text-lg font-semibold mb-2">Text Sets </h3>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
