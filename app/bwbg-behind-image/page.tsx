@@ -318,7 +318,23 @@ const Page = () => {
                                 )}
                             </div>
                             <div className='flex flex-col w-full'>
-                            <h3 className="text-lg font-semibold mb-2">Text Sets </h3>
+                            <div className="mb-4">
+                                    <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
+                                    <div className="space-y-4">
+                                        {['grayscale', 'brightness', 'contrast', 'blur'].map((adjustment) => (
+                                            <div key={adjustment} className="flex flex-col">
+                                                <label className="mb-1 capitalize">{adjustment}</label>
+                                                <Slider
+                                                    value={[bgAdjustments[adjustment as keyof typeof bgAdjustments]]}
+                                                    onValueChange={(value) => handleBgAdjustmentChange(adjustment, value[0])}
+                                                    max={adjustment === 'blur' ? 20 : 200}
+                                                    step={1}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            <h3 className="text-lg font-semibold mb-2 mt-4">Text Sets </h3>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
@@ -335,23 +351,6 @@ const Page = () => {
                                         />
                                     ))}
                                 </Accordion>
-                                
-                                <div className="mt-4">
-                                    <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
-                                    <div className="space-y-4">
-                                        {['grayscale', 'brightness', 'contrast', 'blur'].map((adjustment) => (
-                                            <div key={adjustment} className="flex flex-col">
-                                                <label className="mb-1 capitalize">{adjustment}</label>
-                                                <Slider
-                                                    value={[bgAdjustments[adjustment as keyof typeof bgAdjustments]]}
-                                                    onValueChange={(value) => handleBgAdjustmentChange(adjustment, value[0])}
-                                                    max={adjustment === 'blur' ? 20 : 200}
-                                                    step={1}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
                                 
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
                                 <Button onClick={saveCompositeImage} className="mt-4">
