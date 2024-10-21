@@ -52,6 +52,9 @@ const Page = () => {
     // Add this new state for the temporary gradient angle during slider interaction
     const [tempGradientAngle, setTempGradientAngle] = useState(0);
 
+    // Add this state to trigger gradient recalculation
+    const [shouldRecalculateGradient, setShouldRecalculateGradient] = useState(false);
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -60,7 +63,7 @@ const Page = () => {
     }, [selectedImage]);
 
     useEffect(() => {
-        if (isImageSetupDone && imageSize.width && imageSize.height) {
+        if (isImageSetupDone && imageSize.width && imageSize.height && shouldRecalculateGradient) {
             const canvas = document.createElement('canvas');
             canvas.width = imageSize.width;
             canvas.height = imageSize.height;
@@ -88,9 +91,10 @@ const Page = () => {
 
                 setGradientCanvas(canvas);
                 setIsGradientReady(true);
+                setShouldRecalculateGradient(false); // Reset the flag
             }
         }
-    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle]);
+    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle, shouldRecalculateGradient]);
 
     useEffect(() => {
         if (gradientCanvas && noiseLevel > 0) {
@@ -318,17 +322,31 @@ const Page = () => {
         setTempGradientAngle(value[0]);
     };
 
-    // Add this new function to handle the end of slider interaction
+    // Modify the handleGradientAngleChangeEnd function
     const handleGradientAngleChangeEnd = (value: number[]) => {
         setGradientAngle(value[0]);
+        setShouldRecalculateGradient(true);
     };
 
     // Add this new function to handle direct input of gradient angle
     const handleGradientAngleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value, 10);
         if (!isNaN(value) && value >= 0 && value <= 360) {
-            setGradientAngle(value);
             setTempGradientAngle(value);
+        }
+    };
+
+    // Add this new function to handle input blur
+    const handleGradientAngleInputBlur = () => {
+        setGradientAngle(tempGradientAngle);
+        setShouldRecalculateGradient(true);
+    };
+
+    // Add this new function to handle input key press
+    const handleGradientAngleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            setGradientAngle(tempGradientAngle);
+            setShouldRecalculateGradient(true);
         }
     };
 
@@ -418,8 +436,10 @@ const Page = () => {
                                                 type="number"
                                                 min={0}
                                                 max={360}
-                                                value={gradientAngle}
+                                                value={tempGradientAngle}
                                                 onChange={handleGradientAngleInput}
+                                                onBlur={handleGradientAngleInputBlur}
+                                                onKeyPress={handleGradientAngleInputKeyPress}
                                                 className="w-20"
                                             />
                                             <span className="text-sm">°</span>
