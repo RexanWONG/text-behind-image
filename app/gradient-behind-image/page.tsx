@@ -46,6 +46,15 @@ const Page = () => {
     // Add this new state to track if the gradient is ready
     const [isGradientReady, setIsGradientReady] = useState(false);
 
+    // Add this new state for the gradient angle
+    const [gradientAngle, setGradientAngle] = useState(0);
+
+    // Add this new state for the temporary gradient angle during slider interaction
+    const [tempGradientAngle, setTempGradientAngle] = useState(0);
+
+    // Add this state to trigger gradient recalculation
+    const [shouldRecalculateGradient, setShouldRecalculateGradient] = useState(false);
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -53,8 +62,16 @@ const Page = () => {
         }
     }, [selectedImage]);
 
+    // Modify this useEffect to trigger gradient calculation when image setup is done
     useEffect(() => {
-        if (isImageSetupDone && imageSize.width && imageSize.height) {
+        if (isImageSetupDone) {
+            setShouldRecalculateGradient(true);
+        }
+    }, [isImageSetupDone]);
+
+    // Modify the gradient calculation useEffect
+    useEffect(() => {
+        if (isImageSetupDone && imageSize.width && imageSize.height && shouldRecalculateGradient) {
             const canvas = document.createElement('canvas');
             canvas.width = imageSize.width;
             canvas.height = imageSize.height;
@@ -67,7 +84,14 @@ const Page = () => {
                     return;
                 }
 
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+                // Calculate start and end points for the gradient based on the angle
+                const angle = gradientAngle * (Math.PI / 180); // Convert to radians
+                const startX = canvas.width / 2 + Math.cos(angle + Math.PI) * canvas.width;
+                const startY = canvas.height / 2 + Math.sin(angle + Math.PI) * canvas.height;
+                const endX = canvas.width / 2 + Math.cos(angle) * canvas.width;
+                const endY = canvas.height / 2 + Math.sin(angle) * canvas.height;
+
+                const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
                 gradient.addColorStop(0, color1);
                 gradient.addColorStop(1, color2);
                 ctx.fillStyle = gradient;
@@ -75,9 +99,10 @@ const Page = () => {
 
                 setGradientCanvas(canvas);
                 setIsGradientReady(true);
+                setShouldRecalculateGradient(false); // Reset the flag
             }
         }
-    }, [color1, color2, imageSize, isImageSetupDone]);
+    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle, shouldRecalculateGradient]);
 
     useEffect(() => {
         if (gradientCanvas && noiseLevel > 0) {
@@ -118,6 +143,7 @@ const Page = () => {
             const url = URL.createObjectURL(imageBlob);
             setRemovedBgImageUrl(url);
             setIsImageSetupDone(true);
+            // The gradient calculation will be triggered by the useEffect when isImageSetupDone becomes true
         } catch (error) {
             console.error(error);
         }
@@ -300,6 +326,39 @@ const Page = () => {
         applyNoiseLevel();
     };
 
+    // Modify the handleGradientAngleChange function
+    const handleGradientAngleChange = (value: number[]) => {
+        setTempGradientAngle(value[0]);
+    };
+
+    // Modify the handleGradientAngleChangeEnd function
+    const handleGradientAngleChangeEnd = (value: number[]) => {
+        setGradientAngle(value[0]);
+        setShouldRecalculateGradient(true);
+    };
+
+    // Add this new function to handle direct input of gradient angle
+    const handleGradientAngleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.target.value, 10);
+        if (!isNaN(value) && value >= 0 && value <= 360) {
+            setTempGradientAngle(value);
+        }
+    };
+
+    // Add this new function to handle input blur
+    const handleGradientAngleInputBlur = () => {
+        setGradientAngle(tempGradientAngle);
+        setShouldRecalculateGradient(true);
+    };
+
+    // Add this new function to handle input key press
+    const handleGradientAngleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            setGradientAngle(tempGradientAngle);
+            setShouldRecalculateGradient(true);
+        }
+    };
+
     return (
         <>
             {user && session && session.user ? (
@@ -377,6 +436,33 @@ const Page = () => {
                                         />
                                         <Button onClick={setRandomColors}>Random Colors</Button>
                                     </div>
+                                    <div className="flex flex-col gap-2 mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <label htmlFor="gradient-angle" className="text-sm font-medium">
+                                                Gradient Angle:
+                                            </label>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={360}
+                                                value={tempGradientAngle}
+                                                onChange={handleGradientAngleInput}
+                                                onBlur={handleGradientAngleInputBlur}
+                                                onKeyPress={handleGradientAngleInputKeyPress}
+                                                className="w-20"
+                                            />
+                                            <span className="text-sm">°</span>
+                                        </div>
+                                        <Slider
+                                            id="gradient-angle"
+                                            min={0}
+                                            max={360}
+                                            step={1}
+                                            value={[tempGradientAngle]}
+                                            onValueChange={handleGradientAngleChange}
+                                            onValueCommit={handleGradientAngleChangeEnd}
+                                        />
+                                    </div>
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor="noise-input" className="text-sm font-medium">
                                             Noise Level (0-100):
@@ -394,6 +480,7 @@ const Page = () => {
                                         />
                                     </div>
                                 </div>
+                                <h3 className="text-lg font-semibold mb-2">Text Set</h3>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
