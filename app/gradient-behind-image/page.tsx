@@ -62,6 +62,14 @@ const Page = () => {
         }
     }, [selectedImage]);
 
+    // Modify this useEffect to trigger gradient calculation when image setup is done
+    useEffect(() => {
+        if (isImageSetupDone) {
+            setShouldRecalculateGradient(true);
+        }
+    }, [isImageSetupDone]);
+
+    // Modify the gradient calculation useEffect
     useEffect(() => {
         if (isImageSetupDone && imageSize.width && imageSize.height && shouldRecalculateGradient) {
             const canvas = document.createElement('canvas');
@@ -135,6 +143,7 @@ const Page = () => {
             const url = URL.createObjectURL(imageBlob);
             setRemovedBgImageUrl(url);
             setIsImageSetupDone(true);
+            // The gradient calculation will be triggered by the useEffect when isImageSetupDone becomes true
         } catch (error) {
             console.error(error);
         }
