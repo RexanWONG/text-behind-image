@@ -82,7 +82,7 @@ const Page = () => {
             x: 50, // Center of the image (x-axis)
             y: 50, // Center of the image (y-axis)
             color: 'white',
-            fontSize: 5, // Percentage of image height
+            fontSize: 30, // Percentage of image height
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -117,7 +117,7 @@ const Page = () => {
 
     const renderTextInPreview = (textSet: any) => {
         const fontSize = (textSet.fontSize / 100) * previewSize.height;
-        const maxWidth = previewSize.width * 1.0; // 90% of preview width
+        const maxWidth = previewSize.width * 1.5; // 150% of preview width
         return (
             <div
                 key={textSet.id}
@@ -176,7 +176,7 @@ const Page = () => {
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
 
                 // Measure text and truncate if necessary
-                const maxWidth = canvas.width * 1.0; // 90% of canvas width
+                const maxWidth = canvas.width * 1.5; // 150% of canvas width
                 let text = textSet.text;
                 let textWidth = ctx.measureText(text).width;
                 if (textWidth > maxWidth) {
