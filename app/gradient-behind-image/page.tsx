@@ -46,6 +46,9 @@ const Page = () => {
     // Add this new state to track if the gradient is ready
     const [isGradientReady, setIsGradientReady] = useState(false);
 
+    // Add this new state for the gradient angle
+    const [gradientAngle, setGradientAngle] = useState(0);
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -67,7 +70,14 @@ const Page = () => {
                     return;
                 }
 
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+                // Calculate start and end points for the gradient based on the angle
+                const angle = gradientAngle * (Math.PI / 180); // Convert to radians
+                const startX = canvas.width / 2 + Math.cos(angle + Math.PI) * canvas.width;
+                const startY = canvas.height / 2 + Math.sin(angle + Math.PI) * canvas.height;
+                const endX = canvas.width / 2 + Math.cos(angle) * canvas.width;
+                const endY = canvas.height / 2 + Math.sin(angle) * canvas.height;
+
+                const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
                 gradient.addColorStop(0, color1);
                 gradient.addColorStop(1, color2);
                 ctx.fillStyle = gradient;
@@ -77,7 +87,7 @@ const Page = () => {
                 setIsGradientReady(true);
             }
         }
-    }, [color1, color2, imageSize, isImageSetupDone]);
+    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle]);
 
     useEffect(() => {
         if (gradientCanvas && noiseLevel > 0) {
@@ -300,6 +310,11 @@ const Page = () => {
         applyNoiseLevel();
     };
 
+    // Add this function to handle gradient angle change
+    const handleGradientAngleChange = (value: number[]) => {
+        setGradientAngle(value[0]);
+    };
+
     return (
         <>
             {user && session && session.user ? (
@@ -376,6 +391,19 @@ const Page = () => {
                                             onChange={(e) => setColor2(e.target.value)}
                                         />
                                         <Button onClick={setRandomColors}>Random Colors</Button>
+                                    </div>
+                                    <div className="flex flex-col gap-2 mb-4">
+                                        <label htmlFor="gradient-angle" className="text-sm font-medium">
+                                            Gradient Angle: {gradientAngle}°
+                                        </label>
+                                        <Slider
+                                            id="gradient-angle"
+                                            min={0}
+                                            max={360}
+                                            step={1}
+                                            value={[gradientAngle]}
+                                            onValueChange={handleGradientAngleChange}
+                                        />
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor="noise-input" className="text-sm font-medium">
