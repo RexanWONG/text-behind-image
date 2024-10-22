@@ -71,7 +71,7 @@ const Page = () => {
 
     // Modify the gradient calculation useEffect
     useEffect(() => {
-        if (isImageSetupDone && imageSize.width && imageSize.height && shouldRecalculateGradient) {
+        if (isImageSetupDone && imageSize.width && imageSize.height && (shouldRecalculateGradient || !isGradientReady)) {
             const canvas = document.createElement('canvas');
             canvas.width = imageSize.width;
             canvas.height = imageSize.height;
@@ -102,7 +102,7 @@ const Page = () => {
                 setShouldRecalculateGradient(false); // Reset the flag
             }
         }
-    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle, shouldRecalculateGradient]);
+    }, [color1, color2, imageSize, isImageSetupDone, gradientAngle, shouldRecalculateGradient, isGradientReady]);
 
     useEffect(() => {
         if (gradientCanvas && noiseLevel > 0) {
@@ -200,6 +200,7 @@ const Page = () => {
         };
         setColor1(randomColor());
         setColor2(randomColor());
+        setShouldRecalculateGradient(true); // Add this line
     };
 
     const renderTextInPreview = (textSet: any) => {
@@ -427,12 +428,18 @@ const Page = () => {
                                         <input
                                             type="color"
                                             value={color1}
-                                            onChange={(e) => setColor1(e.target.value)}
+                                            onChange={(e) => {
+                                                setColor1(e.target.value);
+                                                setShouldRecalculateGradient(true);
+                                            }}
                                         />
                                         <input
                                             type="color"
                                             value={color2}
-                                            onChange={(e) => setColor2(e.target.value)}
+                                            onChange={(e) => {
+                                                setColor2(e.target.value);
+                                                setShouldRecalculateGradient(true);
+                                            }}
                                         />
                                         <Button onClick={setRandomColors}>Random Colors</Button>
                                     </div>
