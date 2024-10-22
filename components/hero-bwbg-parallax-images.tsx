@@ -14,5 +14,5 @@ export function HeroBWBGParallaxImages() {
 }
 
 const images = [
-  peace, lambo, bevo, ballon, space, yellowhouse
+  peace, bevo, lambo, ballon, space, yellowhouse
 ];
