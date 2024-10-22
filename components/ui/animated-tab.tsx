@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { HeroImages } from "../hero-images";
 import { HeroGradientParallaxImages } from "../hero-gradient-parallax-images";
+import { HeroBWBGParallaxImages } from "../hero-bwbg-parallax-images";
 
 type Tab = {
   title: string;
@@ -150,11 +151,12 @@ export function TabsDemo() {
       ),
     },
     {
-      title: "More is coming soon...",
-      value: "more-is-coming-soon",
+      title: "BWBG Behind Image",
+      value: "bwbg-behind-image",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-blue-500 to-purple-600">
-          <p className="mb-4">More is coming soon...</p>
+        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-gray-900 to-gray-00">
+          <p className="mb-4">BWBG Behind Image</p>
+          <HeroBWBGParallaxImages />
         </div>
       ),
     },

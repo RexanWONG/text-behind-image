@@ -322,11 +322,11 @@ const Page = () => {
                                 )}
                             </div>
                             <div className='flex flex-col w-[40%] h-full'>
-                                <div className="overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+                                <div className="overflow-y-auto pr-4 no-visible-scrollbar" style={{ maxHeight: 'calc(100vh - 120px)' }}>
                                     <Accordion type="single" collapsible className="w-full mb-5">
                                         <AccordionItem value="background-adjustments">
                                             <AccordionTrigger>Background Adjustments</AccordionTrigger>
-                                            <AccordionContent className="pt--5"> {/* Added pt-2 for less top padding */}
+                                            <AccordionContent className="pt-2">
                                                 <div className="space-y-4">
                                                     <SliderField
                                                         attribute="grayscale"

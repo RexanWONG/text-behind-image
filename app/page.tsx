@@ -15,7 +15,7 @@ import { IconMenu2, IconX } from "@tabler/icons-react";
 import { TabsDemo } from '@/components/ui/animated-tab'; // Import the new TabsDemo component
 
 const Page = () => {
-    const words = ["text-behind-image", "gradient-bg", "stunning", "creative", "unique"];
+    const words = ["text-behind-image", "gradient-bg", "bwbg", "stunning", "creative", "unique"];
 
     return (
         <div className='flex flex-col min-h-screen items-center w-full mt-10'>
