@@ -12,7 +12,7 @@ import { removeBackground } from "@imgly/background-removal";
 import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
-import { Accordion } from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import '@/app/fonts.css'
 import { HeroBWBGParallaxImages } from '@/components/hero-bwbg-parallax-images';
 import { HeroImages } from '@/components/hero-images';
@@ -323,48 +323,52 @@ const Page = () => {
                             </div>
                             <div className='flex flex-col w-[40%] h-full'>
                                 <div className="overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 120px)' }}>
-                                    <div className="mb-4">
-                                        <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
-                                        <div className="space-y-4">
-                                            <SliderField
-                                                attribute="grayscale"
-                                                label="Grayscale"
-                                                min={0}
-                                                max={100}
-                                                step={1}
-                                                currentValue={bgAdjustments.grayscale}
-                                                handleAttributeChange={handleBgAdjustmentChange}
-                                            />
-                                            <SliderField
-                                                attribute="brightness"
-                                                label="Brightness"
-                                                min={0}
-                                                max={200}
-                                                step={1}
-                                                currentValue={bgAdjustments.brightness}
-                                                handleAttributeChange={handleBgAdjustmentChange}
-                                            />
-                                            <SliderField
-                                                attribute="contrast"
-                                                label="Contrast"
-                                                min={0}
-                                                max={200}
-                                                step={1}
-                                                currentValue={bgAdjustments.contrast}
-                                                handleAttributeChange={handleBgAdjustmentChange}
-                                            />
-                                            <SliderField
-                                                attribute="blur"
-                                                label="Blur"
-                                                min={0}
-                                                max={20}
-                                                step={0.1}
-                                                currentValue={bgAdjustments.blur}
-                                                handleAttributeChange={handleBgAdjustmentChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <h3 className="text-lg font-semibold mb-2 mt-4">Text Sets</h3>
+                                    <Accordion type="single" collapsible className="w-full mb-5">
+                                        <AccordionItem value="background-adjustments">
+                                            <AccordionTrigger>Background Adjustments</AccordionTrigger>
+                                            <AccordionContent className="pt--5"> {/* Added pt-2 for less top padding */}
+                                                <div className="space-y-4">
+                                                    <SliderField
+                                                        attribute="grayscale"
+                                                        label="Grayscale"
+                                                        min={0}
+                                                        max={100}
+                                                        step={1}
+                                                        currentValue={bgAdjustments.grayscale}
+                                                        handleAttributeChange={handleBgAdjustmentChange}
+                                                    />
+                                                    <SliderField
+                                                        attribute="brightness"
+                                                        label="Brightness"
+                                                        min={0}
+                                                        max={200}
+                                                        step={1}
+                                                        currentValue={bgAdjustments.brightness}
+                                                        handleAttributeChange={handleBgAdjustmentChange}
+                                                    />
+                                                    <SliderField
+                                                        attribute="contrast"
+                                                        label="Contrast"
+                                                        min={0}
+                                                        max={200}
+                                                        step={1}
+                                                        currentValue={bgAdjustments.contrast}
+                                                        handleAttributeChange={handleBgAdjustmentChange}
+                                                    />
+                                                    <SliderField
+                                                        attribute="blur"
+                                                        label="Blur"
+                                                        min={0}
+                                                        max={20}
+                                                        step={0.1}
+                                                        currentValue={bgAdjustments.blur}
+                                                        handleAttributeChange={handleBgAdjustmentChange}
+                                                    />
+                                                </div>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                    <h3 className="text-lg font-semibold mb-2">Text Sets</h3>
                                     <Button variant={'secondary'} onClick={addNewTextSet} className="mb-2"><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                     <Accordion type="single" collapsible className="w-full">
                                         {textSets.map(textSet => (
