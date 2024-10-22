@@ -327,7 +327,7 @@ const Page = () => {
                                                 <Slider
                                                     value={[bgAdjustments[adjustment as keyof typeof bgAdjustments]]}
                                                     onValueChange={(value) => handleBgAdjustmentChange(adjustment, value[0])}
-                                                    max={adjustment === 'blur' ? 20 : 200}
+                                                    max={adjustment === 'blur' ? 20 : adjustment === 'grayscale' ? 100 : 200}
                                                     step={1}
                                                 />
                                             </div>
