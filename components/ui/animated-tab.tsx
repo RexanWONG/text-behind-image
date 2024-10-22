@@ -154,7 +154,7 @@ export function TabsDemo() {
       title: "BWBG Behind Image",
       value: "bwbg-behind-image",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-gray-900 to-gray-00">
+        <div className="w-full overflow-hidden relative h-full rounded-2xl p-6 text-xl md:text-3xl font-bold text-white bg-gradient-to-br from-gray-900 to-gray-500">
           <p className="mb-4">BWBG Behind Image</p>
           <HeroBWBGParallaxImages />
         </div>
