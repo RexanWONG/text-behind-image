@@ -292,8 +292,8 @@ const Page = () => {
                     </div>
                     <Separator />
                     {selectedImage ? (
-                        <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div ref={previewRef} className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
+                        <div className='flex flex-row items-start justify-start gap-10 w-full h-[calc(100vh-80px)] p-10'>
+                            <div ref={previewRef} className="min-h-[400px] w-[60%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {isImageSetupDone ? (
                                     <>
                                         <Image
@@ -321,67 +321,67 @@ const Page = () => {
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
                                 )}
                             </div>
-                            <div className='flex flex-col w-full'>
-                            <div className="mb-4">
-                                    <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
-                                    <div className="space-y-4">
-                                        <SliderField
-                                            attribute="grayscale"
-                                            label="Grayscale"
-                                            min={0}
-                                            max={100}
-                                            step={1}
-                                            currentValue={bgAdjustments.grayscale}
-                                            handleAttributeChange={handleBgAdjustmentChange}
-                                        />
-                                        <SliderField
-                                            attribute="brightness"
-                                            label="Brightness"
-                                            min={0}
-                                            max={200}
-                                            step={1}
-                                            currentValue={bgAdjustments.brightness}
-                                            handleAttributeChange={handleBgAdjustmentChange}
-                                        />
-                                        <SliderField
-                                            attribute="contrast"
-                                            label="Contrast"
-                                            min={0}
-                                            max={200}
-                                            step={1}
-                                            currentValue={bgAdjustments.contrast}
-                                            handleAttributeChange={handleBgAdjustmentChange}
-                                        />
-                                        <SliderField
-                                            attribute="blur"
-                                            label="Blur"
-                                            min={0}
-                                            max={20}
-                                            step={0.1}
-                                            currentValue={bgAdjustments.blur}
-                                            handleAttributeChange={handleBgAdjustmentChange}
-                                        />
+                            <div className='flex flex-col w-[40%] h-full'>
+                                <div className="overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+                                    <div className="mb-4">
+                                        <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
+                                        <div className="space-y-4">
+                                            <SliderField
+                                                attribute="grayscale"
+                                                label="Grayscale"
+                                                min={0}
+                                                max={100}
+                                                step={1}
+                                                currentValue={bgAdjustments.grayscale}
+                                                handleAttributeChange={handleBgAdjustmentChange}
+                                            />
+                                            <SliderField
+                                                attribute="brightness"
+                                                label="Brightness"
+                                                min={0}
+                                                max={200}
+                                                step={1}
+                                                currentValue={bgAdjustments.brightness}
+                                                handleAttributeChange={handleBgAdjustmentChange}
+                                            />
+                                            <SliderField
+                                                attribute="contrast"
+                                                label="Contrast"
+                                                min={0}
+                                                max={200}
+                                                step={1}
+                                                currentValue={bgAdjustments.contrast}
+                                                handleAttributeChange={handleBgAdjustmentChange}
+                                            />
+                                            <SliderField
+                                                attribute="blur"
+                                                label="Blur"
+                                                min={0}
+                                                max={20}
+                                                step={0.1}
+                                                currentValue={bgAdjustments.blur}
+                                                handleAttributeChange={handleBgAdjustmentChange}
+                                            />
+                                        </div>
                                     </div>
+                                    <h3 className="text-lg font-semibold mb-2 mt-4">Text Sets</h3>
+                                    <Button variant={'secondary'} onClick={addNewTextSet} className="mb-2"><PlusIcon className='mr-2'/> Add New Text Set</Button>
+                                    <Accordion type="single" collapsible className="w-full">
+                                        {textSets.map(textSet => (
+                                            <TextCustomizer 
+                                                key={textSet.id}
+                                                textSet={{
+                                                    ...textSet,
+                                                    left: textSet.x,
+                                                    top: textSet.y
+                                                }}
+                                                handleAttributeChange={handleAttributeChange}
+                                                removeTextSet={removeTextSet}
+                                                duplicateTextSet={duplicateTextSet}
+                                            />
+                                        ))}
+                                    </Accordion>
                                 </div>
-                            <h3 className="text-lg font-semibold mb-2 mt-4">Text Sets </h3>
-                                <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
-                                <Accordion type="single" collapsible className="w-full mt-2">
-                                    {textSets.map(textSet => (
-                                        <TextCustomizer 
-                                            key={textSet.id}
-                                            textSet={{
-                                                ...textSet,
-                                                left: textSet.x,
-                                                top: textSet.y
-                                            }}
-                                            handleAttributeChange={handleAttributeChange}
-                                            removeTextSet={removeTextSet}
-                                            duplicateTextSet={duplicateTextSet}
-                                        />
-                                    ))}
-                                </Accordion>
-                                
-                                <canvas ref={canvasRef} style={{ display: 'none' }} />
                                 <Button onClick={saveCompositeImage} className="mt-4">
                                     Save image
                                 </Button>
@@ -397,6 +397,7 @@ const Page = () => {
             ) : (
                 <Authenticate />
             )}
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
         </>
     );
 }
