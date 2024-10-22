@@ -14,7 +14,7 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
-import { HeroGradientParallaxImages } from '@/components/hero-gradient-parallax-images';
+import { HeroBWBGParallaxImages } from '@/components/hero-bwbg-parallax-images';
 import { HeroImages } from '@/components/hero-images';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { Slider } from "@/components/ui/slider";
@@ -361,7 +361,7 @@ const Page = () => {
                     ) : (
                         <div className='flex flex-col items-center justify-center min-h-screen w-full'>
                             <h2 className="text-xl font-semibold mt-10">Welcome, get started by uploading an image!</h2>
-                            <HeroParallaxImages />
+                            <HeroBWBGParallaxImages />
                         </div>
                     )}
                 </div>
