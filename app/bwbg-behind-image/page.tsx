@@ -19,6 +19,8 @@ import { HeroImages } from '@/components/hero-images';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { Slider } from "@/components/ui/slider";
 import Link from 'next/link';
+import { Input } from "@/components/ui/input";
+import SliderField from '@/components/editor/slider-field';
 
 const Page = () => {
     const { user } = useUser();
@@ -125,7 +127,9 @@ const Page = () => {
     };
 
     const handleBgAdjustmentChange = (adjustment: string, value: number) => {
-        setBgAdjustments(prev => ({ ...prev, [adjustment]: value }));
+        const max = adjustment === 'blur' ? 20 : adjustment === 'grayscale' ? 100 : 200;
+        const clampedValue = Math.min(Math.max(value, 0), max);
+        setBgAdjustments(prev => ({ ...prev, [adjustment]: clampedValue }));
     };
 
     const applyBackgroundAdjustments = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -321,17 +325,42 @@ const Page = () => {
                             <div className="mb-4">
                                     <h3 className="text-lg font-semibold mb-2">Background Adjustments</h3>
                                     <div className="space-y-4">
-                                        {['grayscale', 'brightness', 'contrast', 'blur'].map((adjustment) => (
-                                            <div key={adjustment} className="flex flex-col">
-                                                <label className="mb-1 capitalize">{adjustment}</label>
-                                                <Slider
-                                                    value={[bgAdjustments[adjustment as keyof typeof bgAdjustments]]}
-                                                    onValueChange={(value) => handleBgAdjustmentChange(adjustment, value[0])}
-                                                    max={adjustment === 'blur' ? 20 : adjustment === 'grayscale' ? 100 : 200}
-                                                    step={1}
-                                                />
-                                            </div>
-                                        ))}
+                                        <SliderField
+                                            attribute="grayscale"
+                                            label="Grayscale"
+                                            min={0}
+                                            max={100}
+                                            step={1}
+                                            currentValue={bgAdjustments.grayscale}
+                                            handleAttributeChange={handleBgAdjustmentChange}
+                                        />
+                                        <SliderField
+                                            attribute="brightness"
+                                            label="Brightness"
+                                            min={0}
+                                            max={200}
+                                            step={1}
+                                            currentValue={bgAdjustments.brightness}
+                                            handleAttributeChange={handleBgAdjustmentChange}
+                                        />
+                                        <SliderField
+                                            attribute="contrast"
+                                            label="Contrast"
+                                            min={0}
+                                            max={200}
+                                            step={1}
+                                            currentValue={bgAdjustments.contrast}
+                                            handleAttributeChange={handleBgAdjustmentChange}
+                                        />
+                                        <SliderField
+                                            attribute="blur"
+                                            label="Blur"
+                                            min={0}
+                                            max={20}
+                                            step={0.1}
+                                            currentValue={bgAdjustments.blur}
+                                            handleAttributeChange={handleBgAdjustmentChange}
+                                        />
                                     </div>
                                 </div>
                             <h3 className="text-lg font-semibold mb-2 mt-4">Text Sets </h3>
