@@ -1,4 +1,4 @@
-// app/gradient-behind-image/page.tsx
+// app/bwbg-behind-image/page.tsx
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -15,11 +15,7 @@ import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import '@/app/fonts.css'
 import { HeroBWBGParallaxImages } from '@/components/hero-bwbg-parallax-images';
-import { HeroImages } from '@/components/hero-images';
-import { HeroParallaxImages } from '@/components/hero-parallax-images';
-import { Slider } from "@/components/ui/slider";
 import Link from 'next/link';
-import { Input } from "@/components/ui/input";
 import SliderField from '@/components/editor/slider-field';
 
 const Page = () => {
@@ -33,6 +29,7 @@ const Page = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
     const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 });
     const previewRef = useRef<HTMLDivElement>(null);
@@ -65,6 +62,7 @@ const Page = () => {
             const img = document.createElement('img');
             img.onload = () => {
                 setImageSize({ width: img.width, height: img.height });
+                setImageDimensions({ width: img.width, height: img.height });
             };
             img.src = imageUrl;
             await setupImage(imageUrl);
@@ -165,15 +163,36 @@ const Page = () => {
     };
 
     const renderTextInPreview = (textSet: any) => {
-        const fontSize = (textSet.fontSize / 100) * previewSize.height;
-        const maxWidth = previewSize.width * 1.5; // 150% of preview width
+        const previewAspectRatio = previewSize.width / previewSize.height;
+        const imageAspectRatio = imageDimensions.width / imageDimensions.height;
+        
+        let scaleFactor: number;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (previewAspectRatio > imageAspectRatio) {
+            // Preview is wider than the image
+            scaleFactor = previewSize.height / imageDimensions.height;
+            offsetX = (previewSize.width - imageDimensions.width * scaleFactor) / 2;
+        } else {
+            // Preview is taller than the image
+            scaleFactor = previewSize.width / imageDimensions.width;
+            offsetY = (previewSize.height - imageDimensions.height * scaleFactor) / 2;
+        }
+
+        const fontSize = (textSet.fontSize / 100) * imageDimensions.height * scaleFactor;
+        const maxWidth = imageDimensions.width * scaleFactor * 1.5; // 150% of scaled image width
+
+        const left = offsetX + (textSet.x / 100) * imageDimensions.width * scaleFactor;
+        const top = offsetY + (textSet.y / 100) * imageDimensions.height * scaleFactor;
+
         return (
             <div
                 key={textSet.id}
                 style={{
                     position: 'absolute',
-                    top: `${textSet.y}%`,
-                    left: `${textSet.x}%`,
+                    top: `${top}px`,
+                    left: `${left}px`,
                     transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
                     color: textSet.color,
                     textAlign: 'center',
@@ -258,7 +277,7 @@ const Page = () => {
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = 'text-behind-image.png';
+            link.download = 'bwbg-behind-image.png';
             link.href = dataUrl;
             link.click();
         }
@@ -269,18 +288,18 @@ const Page = () => {
             {user && session && session.user ? (
                 <div className='flex flex-col min-h-screen'>
                     <div className='flex flex-row items-center justify-between p-5 px-10'>
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            <Link href="/">
+                        <Link href="/" className="hover:underline">
+                            <h2 className="text-2xl font-semibold tracking-tight">
                                 BWBG behind image editor
-                            </Link>
-                        </h2>
+                            </h2>
+                        </Link>
                         <div className='flex gap-4'>
                             <input
                                 type="file"
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
-                                accept=".jpg, .jpeg, .png" // Updated to accept only jpg and png
+                                accept=".jpg, .jpeg, .png"
                             />
                             <Button onClick={handleUploadImage}>
                                 Upload image
@@ -393,7 +412,7 @@ const Page = () => {
                         </div>
                     ) : (
                         <div className='flex flex-col items-center justify-center min-h-screen w-full'>
-                            <h2 className="text-xl font-semibold mt-10">Welcome, get started by uploading an image!</h2>
+                            <h2 className="text-xl font-semibold mb-8">Welcome, get started by uploading an image!</h2>
                             <HeroBWBGParallaxImages />
                         </div>
                     )}
