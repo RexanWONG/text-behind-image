@@ -55,6 +55,9 @@ const Page = () => {
     // Add this state to trigger gradient recalculation
     const [shouldRecalculateGradient, setShouldRecalculateGradient] = useState(false);
 
+    // Add this new state to store the image dimensions
+    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+
     useEffect(() => {
         if (previewRef.current) {
             const { width, height } = previewRef.current.getBoundingClientRect();
@@ -128,9 +131,10 @@ const Page = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
-            const img = document.createElement('img');
+            const img = document.createElement('img');;
             img.onload = () => {
                 setImageSize({ width: img.width, height: img.height });
+                setImageDimensions({ width: img.width, height: img.height });
             };
             img.src = imageUrl;
             await setupImage(imageUrl);
@@ -204,15 +208,36 @@ const Page = () => {
     };
 
     const renderTextInPreview = (textSet: any) => {
-        const fontSize = (textSet.fontSize / 100) * previewSize.height;
-        const maxWidth = previewSize.width * 1.5; // 150% of preview width
+        const previewAspectRatio = previewSize.width / previewSize.height;
+        const imageAspectRatio = imageDimensions.width / imageDimensions.height;
+        
+        let scaleFactor: number;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (previewAspectRatio > imageAspectRatio) {
+            // Preview is wider than the image
+            scaleFactor = previewSize.height / imageDimensions.height;
+            offsetX = (previewSize.width - imageDimensions.width * scaleFactor) / 2;
+        } else {
+            // Preview is taller than the image
+            scaleFactor = previewSize.width / imageDimensions.width;
+            offsetY = (previewSize.height - imageDimensions.height * scaleFactor) / 2;
+        }
+
+        const fontSize = (textSet.fontSize / 100) * imageDimensions.height * scaleFactor;
+        const maxWidth = imageDimensions.width * scaleFactor * 1.5; // 150% of scaled image width
+
+        const left = offsetX + (textSet.x / 100) * imageDimensions.width * scaleFactor;
+        const top = offsetY + (textSet.y / 100) * imageDimensions.height * scaleFactor;
+
         return (
             <div
                 key={textSet.id}
                 style={{
                     position: 'absolute',
-                    top: `${textSet.y}%`,
-                    left: `${textSet.x}%`,
+                    top: `${top}px`,
+                    left: `${left}px`,
                     transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
                     color: textSet.color,
                     textAlign: 'center',
