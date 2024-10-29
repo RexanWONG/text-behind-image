@@ -166,8 +166,8 @@ const Page = () => {
                     </div>
                     <Separator />
                     {selectedImage ? (
-                        <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
+                        <div className='flex flex-row items-start justify-start gap-10 w-full h-[calc(100vh-100px)] p-10'>
+                            <div className="sticky top-10 min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {isImageSetupDone ? (
                                     <Image
                                         src={selectedImage} 
@@ -209,7 +209,7 @@ const Page = () => {
                                     /> 
                                 )}
                             </div>
-                            <div className='flex flex-col w-full'>
+                            <div className='flex flex-col w-full overflow-y-auto h-full'>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
