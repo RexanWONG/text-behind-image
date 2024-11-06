@@ -14,6 +14,7 @@ import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
+import { ModeToggle } from '@/components/mode-toggle';
 
 const Page = () => {
     const { user } = useUser();
@@ -159,6 +160,7 @@ const Page = () => {
                             <Button onClick={handleUploadImage}>
                                 Upload image
                             </Button>
+                            <ModeToggle />
                             <Avatar>
                                 <AvatarImage src={user?.user_metadata.avatar_url} />
                             </Avatar>

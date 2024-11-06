@@ -6,6 +6,7 @@ import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,15 +25,21 @@ export default function RootLayout({
       <body className={inter.className}>
         <SupabaseProvider>
             <UserProvider>
-              <div>
-                {children}
-                <Analytics />
-                <SpeedInsights />
-                <Toaster />
-              </div>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <div>
+                  {children}
+                  <Analytics />
+                  <SpeedInsights />
+                  <Toaster />
+                </div>
+              </ThemeProvider>
             </UserProvider>
         </SupabaseProvider>
-        
       </body>
     </html>
   );
