@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import Image, { StaticImageData } from "next/image";
+import Image, { ImageProps, StaticImageData } from "next/image";
 
 type Card = {
   id: number;
@@ -60,8 +60,10 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
 };
 
 const ImageComponent = ({ card }: { card: Card }) => {
+  const MotionImage = motion.create(forwardRef<HTMLImageElement, ImageProps>((props, ref) => <Image {...props} ref={ref} />));
+
   return (
-    <motion.img
+    <MotionImage
       layoutId={`image-${card.id}-image`}
       src={typeof card.thumbnail === 'string' ? card.thumbnail : card.thumbnail.src} // Handle both types
       height="500"
