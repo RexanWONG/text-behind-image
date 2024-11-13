@@ -146,7 +146,7 @@ const Page = () => {
     return (
         <>
             {user && session && session.user ? (
-                <div className='flex flex-col h-screen overflow-y-hidden'>
+                <div className='flex flex-col h-screen'>
                     <div className="ml-6">
                         <PallyyAd />
                     </div>
@@ -174,7 +174,7 @@ const Page = () => {
                     <Separator />
                     {selectedImage ? (
                         <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="flex flex-col items-start justify-start w-full gap-4">
+                            <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
                                 <Button onClick={saveCompositeImage}>
                                     Save image
@@ -222,7 +222,7 @@ const Page = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='flex flex-col w-full'>
+                            <div className='flex flex-col w-full md:w-1/2'>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
                                 <ScrollArea className="h-[calc(100vh-10rem)] p-2">
                                     <Accordion type="single" collapsible className="w-full mt-2">
