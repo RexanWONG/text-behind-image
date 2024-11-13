@@ -8,10 +8,12 @@ import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { AdditionalInfo } from '@/components/additional-info';
 import Link from 'next/link';
+import PallyyAd from '@/ads/pallyy';
 
 const page = () => {
     return ( 
-        <div className='flex flex-col min-h-screen items-center w-full mt-20'>
+        <div className='flex flex-col min-h-screen items-center w-full'>
+            <PallyyAd />
             <HeroHighlight>
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }} 

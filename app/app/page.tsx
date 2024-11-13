@@ -16,6 +16,7 @@ import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
 import { ModeToggle } from '@/components/mode-toggle';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import PallyyAd from '@/ads/pallyy';
 
 const Page = () => {
     const { user } = useUser();
@@ -146,6 +147,9 @@ const Page = () => {
         <>
             {user && session && session.user ? (
                 <div className='flex flex-col h-screen overflow-y-hidden'>
+                    <div className="ml-6">
+                        <PallyyAd />
+                    </div>
                     <header className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-[12px] md:text-2xl font-semibold tracking-tight">
                             Text behind image editor
