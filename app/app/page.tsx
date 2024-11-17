@@ -222,7 +222,7 @@ const Page = () => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src={user?.user_metadata.avatar_url} /> 
+                                        <AvatarImage src={currentUser?.avatar_url} /> 
                                         <AvatarFallback>TBI</AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
