@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import Image, { StaticImageData } from "next/image";
+import Image, { getImageProps, StaticImageData } from "next/image";
 
 type Card = {
   id: number;
@@ -60,15 +60,22 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
 };
 
 const ImageComponent = ({ card }: { card: Card }) => {
+  const { props: imageProps } = getImageProps({
+    src:
+      typeof card.thumbnail === "string" ? card.thumbnail : card.thumbnail.src,
+    alt: "thumbnail",
+    // TODO: It would be good to specifiy a proper sizes argument for the grid.
+  });
   return (
     <motion.img
       layoutId={`image-${card.id}-image`}
-      src={typeof card.thumbnail === 'string' ? card.thumbnail : card.thumbnail.src} // Handle both types
+      srcSet={imageProps.srcSet} // Handle both types
+      src={imageProps.src} // Handle both types
       height="500"
       width="500"
       className={cn(
         "object-cover object-top inset-0 h-full w-full transition duration-200",
-        "md:absolute" 
+        "md:absolute"
       )}
       alt="thumbnail"
     />
