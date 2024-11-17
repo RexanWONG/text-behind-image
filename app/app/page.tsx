@@ -1,36 +1,73 @@
 // app/app/page.tsx
 'use client'
 
-import React, { useRef, useState } from 'react';
-import { useUser } from '@/hooks/useUser';
-import { useSessionContext } from '@supabase/auth-helpers-react';
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from '@/components/ui/separator';
-import Authenticate from '@/components/authenticate';
-import { Button } from '@/components/ui/button';
-import { removeBackground } from "@imgly/background-removal";
-import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
-import TextCustomizer from '@/components/editor/text-customizer';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+
+import { useUser } from '@/hooks/useUser';
+import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Separator } from '@/components/ui/separator';
 import { Accordion } from '@/components/ui/accordion';
-import '@/app/fonts.css'
-import { ModeToggle } from '@/components/mode-toggle';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ModeToggle } from '@/components/mode-toggle';
+import { Profile } from '@/types';
+import Authenticate from '@/components/authenticate';
+import TextCustomizer from '@/components/editor/text-customizer';
+
+import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
+
+import { removeBackground } from "@imgly/background-removal";
+
 import PallyyAd from '@/ads/pallyy';
+
+import '@/app/fonts.css';
+import PayDialog from '@/components/pay-dialog';
 
 const Page = () => {
     const { user } = useUser();
     const { session } = useSessionContext();
+    const supabaseClient = useSupabaseClient();
+    const [currentUser, setCurrentUser] = useState<Profile>()
+
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isImageSetupDone, setIsImageSetupDone] = useState<boolean>(false);
     const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(null);
     const [textSets, setTextSets] = useState<Array<any>>([]);
+    const [isPayDialogOpen, setIsPayDialogOpen] = useState<boolean>(false); 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
+    const getCurrentUser = async (userId: string) => {
+        try {
+            const { data: profile, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+
+            if (error) {
+                throw error;
+            }
+
+            if (profile) {
+                setCurrentUser(profile[0]);
+            }
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+    };
+
     const handleUploadImage = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
+        if (currentUser && (currentUser.images_generated < 2 || currentUser.paid)) {
+            if (fileInputRef.current) {
+                fileInputRef.current.click();
+            }
+        } else {
+            alert("You have reached the limit of free generations.");
+            setIsPayDialogOpen(true);
         }
     };
 
@@ -49,6 +86,15 @@ const Page = () => {
             const url = URL.createObjectURL(imageBlob);
             setRemovedBgImageUrl(url);
             setIsImageSetupDone(true);
+
+            if (currentUser) {
+                await supabaseClient
+                    .from('profiles')
+                    .update({ images_generated: currentUser.images_generated + 1 })
+                    .eq('id', currentUser.id) 
+                    .select();
+            }
+            
         } catch (error) {
             console.error(error);
         }
@@ -143,9 +189,16 @@ const Page = () => {
         }
     };
 
+    useEffect(() => {
+      if (user?.id) {
+        getCurrentUser(user.id)
+      }
+    }, [user])
+    
     return (
         <>
-            {user && session && session.user ? (
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script>
+            {user && session && session.user && currentUser ? (
                 <div className='flex flex-col h-screen'>
                     <div className="ml-6">
                         <PallyyAd />
@@ -160,20 +213,51 @@ const Page = () => {
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
-                                accept=".jpg, .jpeg, .png" // Updated to accept only jpg and png
+                                accept=".jpg, .jpeg, .png"
                             />
                             <Button onClick={handleUploadImage}>
                                 Upload image
                             </Button>
                             <ModeToggle />
-                            <Avatar>
-                                <AvatarImage src={user?.user_metadata.avatar_url} />
-                            </Avatar>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Avatar className="cursor-pointer">
+                                        <AvatarImage src={user?.user_metadata.avatar_url} /> 
+                                        <AvatarFallback>TBI</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="end">
+                                    <DropdownMenuLabel>
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none">{currentUser?.full_name}</p>
+                                            <p className="text-xs leading-none text-muted-foreground">{user?.user_metadata.email}</p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => setIsPayDialogOpen(true)}>
+                                        <button>{currentUser?.paid ? 'View Plan' : 'Upgrade to Pro'}</button>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </header>
                     <Separator />
+                    {currentUser.paid ? (
+                        <div className='flex items-center justify-center p-2 w-full'>
+                            <p className='text-sm'>
+                                Enjoy your unlimited amount of generations!
+                            </p>
+                        </div>
+                    ) : (
+                        <div className='flex items-center justify-center p-2 w-full'>
+                            <p className='text-sm'>
+                                you have {2 - (currentUser.images_generated)} free generations left. 
+                            </p>
+                            <strong className="text-sm ml-2 cursor-pointer" onClick={() => setIsPayDialogOpen(true)}>Upgrade account for full access</strong>
+                        </div>
+                    )}
                     {selectedImage ? (
-                        <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-10'>
+                        <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen px-10 mt-2'>
                             <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
                                 <Button onClick={saveCompositeImage}>
@@ -243,7 +327,8 @@ const Page = () => {
                         <div className='flex items-center justify-center min-h-screen w-full'>
                             <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
                         </div>
-                    )}
+                    )} 
+                    <PayDialog userDetails={currentUser as any} userEmail={user.user_metadata.email} isOpen={isPayDialogOpen} onClose={() => setIsPayDialogOpen(false)} /> 
                 </div>
             ) : (
                 <Authenticate />

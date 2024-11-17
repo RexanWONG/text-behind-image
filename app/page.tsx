@@ -13,6 +13,7 @@ import PallyyAd from '@/ads/pallyy';
 const page = () => {
     return ( 
         <div className='flex flex-col min-h-screen items-center w-full'>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script>
             <PallyyAd />
             <HeroHighlight>
                 <motion.h1
@@ -28,6 +29,7 @@ const page = () => {
                     {" "} designs easily
                 </motion.h1>
             </HeroHighlight>
+            
             <Link href={'/app'} className='mb-10'>
                 <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
                     Open the app
