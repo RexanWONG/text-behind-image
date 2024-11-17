@@ -108,7 +108,7 @@ const PlanCard: React.FC<Plan> = ({ userDetails, userEmail, title, description, 
                     {title.includes("Free") ? (
                         userDetails.paid ? (
                             <Button onClick={() => setIsConfirmDialogOpen(true)} disabled={false}>
-                                {loading ? 'Please wait' : 'Downgrade'}
+                                {loading ? 'Please wait' : 'Cancel Subscription'}
                             </Button>
                         ) : (
                             <Button disabled={true}>
@@ -132,9 +132,9 @@ const PlanCard: React.FC<Plan> = ({ userDetails, userEmail, title, description, 
             <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
                 <DialogContent>
                     <DialogHeader> 
-                        <DialogTitle>Confirm Downgrade</DialogTitle>
+                        <DialogTitle>Confirm Cancel Subscription</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to downgrade your plan? This will cancel your current subscription.
+                            Are you sure you want to cancel your plan? This will cancel your current subscription.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
