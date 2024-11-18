@@ -46,7 +46,6 @@ const PlanCard: React.FC<Plan> = ({ userDetails, userEmail, title, description, 
                 user_id: userDetails.id,
                 email: userEmail,
                 plan_name: "Text Behind Image Pro Plan",
-                price: 4
             });
 
             router.push(response.data.paymentLink);

@@ -3,7 +3,7 @@ import { stripe } from "@/lib/stripe";
 export async function POST(req: Request, res: Response) {
     try {
         const body = await req.json();
-        const { user_id, email, plan_name, price } = body;
+        const { user_id, email, plan_name } = body;
 
         let session = await stripe.checkout.sessions.create({
                 customer_email: email,
@@ -17,7 +17,7 @@ export async function POST(req: Request, res: Response) {
                             recurring: {
                                 interval: 'month'
                             },
-                            unit_amount: price * 100,
+                            unit_amount: 4 * 100,
                         },
                         quantity: 1,
                     },
