@@ -317,6 +317,7 @@ const Page = () => {
                                                 handleAttributeChange={handleAttributeChange}
                                                 removeTextSet={removeTextSet}
                                                 duplicateTextSet={duplicateTextSet}
+                                                userId={currentUser.id}
                                             />
                                         ))}
                                     </Accordion>

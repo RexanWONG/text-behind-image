@@ -165,7 +165,7 @@ const PayDialog: React.FC<PayDialogProps> = ({ userDetails, userEmail, isOpen, o
             title="Free"
             description="The text behind image experience with some limitations"
             price="$0"
-            features={["2 free generations / account" ]}
+            features={["2 free generations / account", "Access to 6 free fonts"]}
           />
           <PlanCard 
             userDetails={userDetails}
@@ -173,7 +173,7 @@ const PayDialog: React.FC<PayDialogProps> = ({ userDetails, userEmail, isOpen, o
             title="Pro ✨"
             description="Everything in the free plan, plus more that makes your tbi designs better"
             price="$4"
-            features={["Unlimited generations / account"]}
+            features={["Unlimited generations / account", "Access to all fonts"]}
           />
         </div> 
       </DialogContent>

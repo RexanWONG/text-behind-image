@@ -27,10 +27,11 @@ interface TextCustomizerProps {
     };
     handleAttributeChange: (id: number, attribute: string, value: any) => void;
     removeTextSet: (id: number) => void;
-    duplicateTextSet: (textSet: any) => void; // Add this line
+    duplicateTextSet: (textSet: any) => void; 
+    userId: string
 }
 
-const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttributeChange, removeTextSet, duplicateTextSet }) => {
+const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttributeChange, removeTextSet, duplicateTextSet, userId }) => {
     return (
         <AccordionItem value={`item-${textSet.id}`}>
             <AccordionTrigger>{textSet.text}</AccordionTrigger>
@@ -45,6 +46,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     attribute="fontFamily" 
                     currentFont={textSet.fontFamily} 
                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                    userId={userId}
                 /> 
                 <div className='flex flex-row items-start justify-start gap-10 w-full'>
                     <ColorPicker

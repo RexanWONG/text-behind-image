@@ -1,4 +1,13 @@
-export const fonts = [
+export const FREE_FONTS = [
+    'Inter',
+    'Playfair Display',
+    'Dancing Script',
+    'Oswald',
+    'Merriweather',
+    'Pacifico'
+];
+
+export const ALL_FONTS = [
     "ABeeZee", "Abel", "Abril Fatface", "Acme", "Alata", "Albert Sans", "Alegreya", "Alegreya Sans",
     "Alegreya Sans SC", "Alfa Slab One", "Alice", "Almarai", "Amatic SC", "Amiri", "Antic Slab", "Anton",
     "Architects Daughter", "Archivo", "Archivo Black", "Archivo Narrow", "Arimo", "Arsenal", "Arvo", "Asap",
