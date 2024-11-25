@@ -17,7 +17,7 @@ const ads: Ad[] = [
         name: "BoilerplateHub",
         image: boilerplateHubImg,
         description: "Build your SaaS or App in days with the best Boilerplates 🚀. Save up to $100 this Black Friday! 🔥",
-        url: "https://www.boilerplatehub.com"
+        url: "https://www.boilerplatehub.com?utm_source=textbehindimage&utm_medium=referral&utm_campaign=promotion"
     },
 ]
 
