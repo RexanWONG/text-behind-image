@@ -26,6 +26,7 @@ import PallyyAd from '@/ads/pallyy';
 
 import '@/app/fonts.css';
 import PayDialog from '@/components/pay-dialog';
+import AppAds from '@/components/editor/app-ads';
 
 const Page = () => {
     const { user } = useUser();
@@ -204,10 +205,11 @@ const Page = () => {
                         <PallyyAd />
                     </div>
                     <header className='flex flex-row items-center justify-between p-5 px-10'>
-                        <h2 className="text-[12px] md:text-2xl font-semibold tracking-tight">
-                            Text behind image editor
+                        <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
+                            <span className="block md:hidden">TBI</span>
+                            <span className="hidden md:block">Text behind image editor</span>
                         </h2>
-                        <div className='flex gap-4'>
+                        <div className='flex gap-4 items-center'>
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -215,9 +217,38 @@ const Page = () => {
                                 onChange={handleFileChange}
                                 accept=".jpg, .jpeg, .png"
                             />
-                            <Button onClick={handleUploadImage}>
-                                Upload image
-                            </Button>
+                            <div className='flex items-center gap-5'>
+                                <div className='hidden md:block font-semibold'>
+                                    {currentUser.paid ? (
+                                        <p className='text-sm'>
+                                            Unlimited generations
+                                        </p>
+                                    ) : (
+                                        <div className='flex items-center gap-2'>
+                                            <p className='text-sm'>
+                                                {2 - (currentUser.images_generated)} generations left
+                                            </p>
+                                            <Button 
+                                                variant="link" 
+                                                className="p-0 h-auto text-sm text-primary hover:underline"
+                                                onClick={() => setIsPayDialogOpen(true)}
+                                            >
+                                                Upgrade
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className='flex gap-2'>
+                                    <Button onClick={handleUploadImage}>
+                                        Upload image
+                                    </Button>
+                                    {selectedImage && (
+                                        <Button onClick={saveCompositeImage} className='hidden md:flex'>
+                                            Save image
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
                             <ModeToggle />
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -241,28 +272,36 @@ const Page = () => {
                             </DropdownMenu>
                         </div>
                     </header>
-                    <Separator />
-                    {currentUser.paid ? (
-                        <div className='flex items-center justify-center p-2 w-full'>
-                            <p className='text-sm'>
-                                Enjoy your unlimited amount of generations!
-                            </p>
-                        </div>
-                    ) : (
-                        <div className='flex items-center justify-center p-2 w-full'>
-                            <p className='text-sm'>
-                                you have {2 - (currentUser.images_generated)} free generations left. 
-                            </p>
-                            <strong className="text-sm ml-2 cursor-pointer" onClick={() => setIsPayDialogOpen(true)}>Upgrade account for full access</strong>
-                        </div>
-                    )}
+                    <Separator /> 
                     {selectedImage ? (
                         <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen px-10 mt-2'>
                             <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
-                                <Button onClick={saveCompositeImage}>
-                                    Save image
-                                </Button>
+                                <div className='flex items-center gap-2'>
+                                    <Button onClick={saveCompositeImage} className='md:hidden'>
+                                        Save image
+                                    </Button>
+                                    <div className='block md:hidden'>
+                                        {currentUser.paid ? (
+                                            <p className='text-sm'>
+                                                Unlimited generations
+                                            </p>
+                                        ) : (
+                                            <div className='flex items-center gap-5'>
+                                                <p className='text-sm'>
+                                                    {2 - (currentUser.images_generated)} generations left
+                                                </p>
+                                                <Button 
+                                                    variant="link" 
+                                                    className="p-0 h-auto text-sm text-primary hover:underline"
+                                                    onClick={() => setIsPayDialogOpen(true)}
+                                                >
+                                                    Upgrade
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                                 <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                     {isImageSetupDone ? (
                                         <Image
@@ -305,6 +344,7 @@ const Page = () => {
                                         /> 
                                     )}
                                 </div>
+                                <AppAds />
                             </div>
                             <div className='flex flex-col w-full md:w-1/2'>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>

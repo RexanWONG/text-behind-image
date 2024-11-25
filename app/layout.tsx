@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from 'next/font/google'
+import { GeistSans } from 'geist/font/sans';
 import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
@@ -22,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={GeistSans.className}>
         <SupabaseProvider>
             <UserProvider>
               <ThemeProvider
