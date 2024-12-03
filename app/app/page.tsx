@@ -344,7 +344,7 @@ const Page = () => {
                                         /> 
                                     )}
                                 </div>
-                                {/* <AppAds /> */}
+                                <AppAds />
                             </div>
                             <div className='flex flex-col w-full md:w-1/2'>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
