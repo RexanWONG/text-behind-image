@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import Image, { StaticImageData } from 'next/image'
-import formfactorImg from '@/public/ads/formfactor.png'
+import formfactorImg from '@/public/ads/formfactor.jpg'
 
 interface Ad {
     name: string;
