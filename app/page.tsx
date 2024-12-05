@@ -55,7 +55,7 @@ const page = () => {
             <div className="flex flex-col items-center justify-center my-10">
                 <AdditionalInfo />
                 <div className='text-2xl mt-10'>
-                    Created by <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>Rexan Wong</Link>         
+                    2024 @ <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>rexanwong.xyz</Link> - All Rights Reserved - Created by Rexan Wong
                 </div> 
             </div>
         </div>
