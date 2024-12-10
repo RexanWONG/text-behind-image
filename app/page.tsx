@@ -30,6 +30,10 @@ const page = () => {
                 </motion.h1>
             </HeroHighlight>
             
+            <div className="text-lg text-center font-semibold mb-4">
+                150,000+ text behind image designs created
+            </div>
+
             <Link href={'/app'} className='mb-10'>
                 <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
                     Open the app
