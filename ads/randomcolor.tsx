@@ -9,7 +9,7 @@ const RandomColorAd = () => {
   if (!isVisible) return null;
 
   return (
-    <a href="https://randomcolor.com" target="_blank" rel="noopener noreferrer" className="block">
+    <a href="https://randomcolor.com?utm_source=text-behind-image&utm_medium=referral" target="_blank" rel="noopener noreferrer" className="block">
       <header className="flex flex-row items-center justify-between p-4 bg-white dark:bg-black border-b top-0 w-full">
         <div className="flex flex-row items-center gap-4">
           <div className="w-[60px] h-[60px] flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg">
