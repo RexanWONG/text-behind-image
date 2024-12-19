@@ -3,9 +3,9 @@ import React from "react";
 import { LayoutGrid } from "./ui/layout-grid";
 
 import POV from '@/public/pov.png'
-import Bear from '@/public/bear.png'
 import Ride from '@/public/ride.png'
 import SF from '@/public/sf.png'
+import Goats from '@/public/goats.png'
 
 export function HeroImages() {
   return (
@@ -29,21 +29,21 @@ const SkeletonOne = () => {
   );
 };
 
-const SkeletonTwo = () => {
+const SkeletonThree = () => {
   return (
     <div>
       <p className="font-bold md:text-4xl text-xl text-white">
-        Bear: Nature's Majesty
+        Rexan Wong: The Creator with the inspiration (Daniel Dalen)
       </p>
       <p className="font-normal text-base text-white"></p>
       <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-        Witness the grandeur of wildlife. The text behind the image effect adds depth, making the majestic bear even more striking.
+        Hey, it's Rexan! I'm the creator of this website and I'm so glad you're here. I got the inspiration to build this app from Daniel's thumbnails.
       </p>
     </div>
   );
 };
 
-const SkeletonThree = () => {
+const SkeletonTwo = () => {
   return (
     <div>
       <p className="font-bold md:text-4xl text-xl text-white">
@@ -82,14 +82,15 @@ const cards = [
     id: 2,
     content: <SkeletonTwo />,
     className: "col-span-1",
-    thumbnail: Bear
+    thumbnail: Ride
   },
   {
     id: 3,
     content: <SkeletonThree />,
     className: "col-span-1",
-    thumbnail: Ride
+    thumbnail: Goats
   },
+  
   {
     id: 4,
     content: <SkeletonFour />,
