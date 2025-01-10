@@ -115,7 +115,9 @@ const Page = () => {
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
             shadowSize: 4,
-            rotation: 0
+            rotation: 0,
+            tiltX: 0,
+            tiltY: 0
         }]);
     };
 
@@ -150,7 +152,9 @@ const Page = () => {
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
     
             textSets.forEach(textSet => {
-                ctx.save(); // Save the current state
+                ctx.save();
+                
+                // Set up text properties
                 ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
@@ -160,11 +164,29 @@ const Page = () => {
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
     
-                // Move the context to the text position and rotate
+                // Move to position first
                 ctx.translate(x, y);
-                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-                ctx.restore(); // Restore the original state
+                
+                // Apply 3D transforms
+                const tiltXRad = (-textSet.tiltX * Math.PI) / 180;
+                const tiltYRad = (-textSet.tiltY * Math.PI) / 180;
+    
+                // Use a simpler transform that maintains the visual tilt
+                ctx.transform(
+                    Math.cos(tiltYRad),          // Horizontal scaling
+                    Math.sin(0),          // Vertical skewing
+                    -Math.sin(0),         // Horizontal skewing
+                    Math.cos(tiltXRad),          // Vertical scaling
+                    0,                           // Horizontal translation
+                    0                            // Vertical translation
+                );
+    
+                // Apply rotation last
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+    
+                // Draw text at transformed position
+                ctx.fillText(textSet.text, 0, 0);
+                ctx.restore();
             });
     
             if (removedBgImageUrl) {
@@ -321,13 +343,20 @@ const Page = () => {
                                                 position: 'absolute',
                                                 top: `${50 - textSet.top}%`,
                                                 left: `${textSet.left + 50}%`,
-                                                transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                                                transform: `
+                                                    translate(-50%, -50%) 
+                                                    rotate(${textSet.rotation}deg)
+                                                    perspective(1000px)
+                                                    rotateX(${textSet.tiltX}deg)
+                                                    rotateY(${textSet.tiltY}deg)
+                                                `,
                                                 color: textSet.color,
                                                 textAlign: 'center',
                                                 fontSize: `${textSet.fontSize}px`,
                                                 fontWeight: textSet.fontWeight,
                                                 fontFamily: textSet.fontFamily,
-                                                opacity: textSet.opacity
+                                                opacity: textSet.opacity,
+                                                transformStyle: 'preserve-3d'
                                             }}
                                         >
                                             {textSet.text}
