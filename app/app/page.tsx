@@ -223,9 +223,9 @@ const Page = () => {
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script>
             {user && session && session.user && currentUser ? (
                 <div className='flex flex-col h-screen'>
-                    <div className="ml-6">
+                    {/* <div className="ml-6">
                         <RandomColorAd />
-                    </div>
+                    </div> */}
                     <header className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
                             <span className="block md:hidden">TBI</span>
