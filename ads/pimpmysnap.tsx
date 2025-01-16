@@ -19,10 +19,10 @@ const PimpMySnapAd = () => {
             <div className="flex flex-col items-center justify-center gap-1">
               <p className="text-sm md:hidden text-purple-500">
                 <strong>pimpmysnap.com - </strong>
-                Create scroll-stopping screenshots in seconds. Try it FREE!
+                Create scroll-stopping screenshots in seconds.{"  "} 
                 <br className="block md:hidden" />
                 <strong className="text-purple-600">
-                  Start creating now
+                  Try it FREE!
                 </strong>
                 <span className='text-xs text-purple-400 px-2'>
                   SPONSORED
@@ -31,9 +31,9 @@ const PimpMySnapAd = () => {
               <div className="hidden md:block">
                 <p className="text-base inline text-purple-500">
                   <strong>pimpmysnap.com - </strong>
-                  Create scroll-stopping screenshots in seconds. Try it FREE!{" "}
+                  Create scroll-stopping screenshots in seconds. {" "}
                   <strong className="text-purple-600 text-base">
-                    Start creating now
+                    Try it FREE!
                   </strong>   
                   <span className='text-xs text-purple-400 px-2'>
                     SPONSORED
