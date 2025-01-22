@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import Image, { StaticImageData } from 'next/image'
 import formfactorImg from '@/public/ads/formfactor.jpg'
-import ninjatoolsImg from '@/public/ads/ninjatools.png'
- 
+import ninjatoolsImg from '../../public/ads/ninjatools.png'
+
 interface Ad {
     name: string;
     image: StaticImageData;
