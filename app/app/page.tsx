@@ -22,12 +22,10 @@ import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 
 import { removeBackground } from "@imgly/background-removal";
 
-import RandomColorAd from '@/ads/randomcolor';
-
 import '@/app/fonts.css';
 import PayDialog from '@/components/pay-dialog';
 import AppAds from '@/components/editor/app-ads';
-import PimpMySnapAd from '@/ads/pimpmysnap';
+import FirecrawlAd from '@/ads/firecrawl';
 
 const Page = () => {
     const { user } = useUser();
@@ -224,7 +222,7 @@ const Page = () => {
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script>
             {user && session && session.user && currentUser ? (
                 <div className='flex flex-col h-screen'>
-                    <PimpMySnapAd />
+                    <FirecrawlAd />
                     <header className='flex flex-row items-center justify-between p-5 px-10'>
                         <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
                             <span className="block md:hidden">TBI</span>
