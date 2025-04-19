@@ -173,7 +173,11 @@ const PayDialog: React.FC<PayDialogProps> = ({ userDetails, userEmail, isOpen, o
             title="Pro ✨"
             description="Everything in the free plan, plus more that makes your tbi designs better"
             price="$9"
-            features={["Unlimited generations / account", "Access to all 250 fonts"]}
+            features={[
+              "Unlimited generations / account", 
+              "Access to all 250 fonts",
+              "Letter spacing control"
+            ]}
           />
         </div> 
       </DialogContent>

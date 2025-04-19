@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputField from './input-field';
 import SliderField from './slider-field';
 import ColorPicker from './color-picker';
 import FontFamilyPicker from './font-picker'; 
 import { Button } from '../ui/button';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, ArrowLeftRight, ArrowUpDown, AlignHorizontalSpaceAround } from 'lucide-react';
+import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, ArrowLeftRight, ArrowUpDown, AlignHorizontalSpaceAround, LockIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface TextCustomizerProps {
@@ -38,6 +39,27 @@ interface TextCustomizerProps {
 
 const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttributeChange, removeTextSet, duplicateTextSet, userId }) => {
     const [activeControl, setActiveControl] = useState<string | null>(null);
+    const [isPaidUser, setIsPaidUser] = useState(false);
+    const supabaseClient = useSupabaseClient();
+
+    useEffect(() => { 
+        const checkUserStatus = async () => {
+            try {
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('paid')
+                    .eq('id', userId)
+                    .single();
+
+                if (error) throw error;
+                setIsPaidUser(profile?.paid || false);
+            } catch (error) {
+                console.error('Error checking user status:', error);
+            }
+        };
+
+        checkUserStatus();
+    }, [userId, supabaseClient]);
 
     const controls = [
         { id: 'text', icon: <CaseSensitive size={20} />, label: 'Text' },
@@ -46,13 +68,18 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
         { id: 'position', icon: <Move size={20} />, label: 'Position' },
         { id: 'fontSize', icon: <Text size={20} />, label: 'Size' },
         { id: 'fontWeight', icon: <Bold size={20} />, label: 'Weight' },
-        { id: 'letterSpacing', icon: <AlignHorizontalSpaceAround size={20} />, label: 'Letter spacing' },
+        { id: 'letterSpacing', icon: <AlignHorizontalSpaceAround size={20} />, label: 'Letter spacing', premium: true },
         { id: 'opacity', icon: <LightbulbIcon size={20} />, label: 'Opacity' },
         { id: 'rotation', icon: <RotateCw size={20} />, label: 'Rotate' },
         { id: 'tiltX', icon: <ArrowLeftRight size={20} />, label: 'Tilt X' },
         { id: 'tiltY', icon: <ArrowUpDown size={20} />, label: 'Tilt Y' },
-        
     ];  
+
+    const handlePremiumAttributeChange = (attribute: string, value: any) => {
+        if (isPaidUser || attribute !== 'letterSpacing') {
+            handleAttributeChange(textSet.id, attribute, value);
+        }
+    };
 
     return (
         <AccordionItem value={`item-${textSet.id}`}>
@@ -68,8 +95,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     onClick={() => setActiveControl(activeControl === control.id ? null : control.id)}
                                     className={`flex flex-col items-center justify-center min-w-[4.2rem] h-[4.2rem] rounded-lg ${
                                         activeControl === control.id ? 'bg-primary text-primary-foreground' : 'bg-secondary'
-                                    }`}
+                                    } ${control.premium && !isPaidUser ? 'opacity-70' : ''}`}
                                 >
+                                    {control.premium && !isPaidUser && <LockIcon size={12} className="absolute top-1 right-1" />}
                                     {control.icon}
                                     <span className="text-xs mt-1">{control.label}</span>
                                 </button>
@@ -161,7 +189,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 max={100}
                                 step={1}
                                 currentValue={textSet.letterSpacing}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                                disabled={!isPaidUser}
+                                premiumFeature={!isPaidUser}
                             />
                         )}
 
@@ -212,8 +242,6 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
                         )}
-
-                        
                     </div>
                 </div>
 
@@ -283,7 +311,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         max={100}
                         step={1}
                         currentValue={textSet.letterSpacing}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                        handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                        disabled={!isPaidUser}
+                        premiumFeature={!isPaidUser}
                     />
                     <SliderField
                         attribute="opacity"
@@ -321,12 +351,11 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         currentValue={textSet.tiltY}
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
-                    
                 </div>
 
                 <div className="flex flex-row gap-2 my-8">
                     <Button onClick={() => duplicateTextSet(textSet)}>Duplicate Text Set</Button>
-                    <Button onClick={() => removeTextSet(textSet.id)} variant="destructive">Remove Text Set</Button>
+                    <Button variant="destructive" onClick={() => removeTextSet(textSet.id)}>Remove Text Set</Button>
                 </div>
             </AccordionContent>
         </AccordionItem>
