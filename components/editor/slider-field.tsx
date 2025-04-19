@@ -12,6 +12,7 @@ interface SliderFieldProps {
   max: number;
   step: number;
   currentValue: number;
+  hasTopPadding?: boolean;
   handleAttributeChange: (attribute: string, value: number) => void;
 }
 
@@ -22,6 +23,7 @@ const SliderField: React.FC<SliderFieldProps> = ({
     max,
     step,
     currentValue,
+    hasTopPadding = true,
     handleAttributeChange
   }) => { 
     const handleSliderInputFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +33,7 @@ const SliderField: React.FC<SliderFieldProps> = ({
   
     return (
       <>
-        <div className="flex items-center justify-between mt-8">
+        <div className={`flex items-center justify-between ${hasTopPadding ? 'mt-8' : ''}`}>
           <Label htmlFor={attribute}>{label}</Label>
           <Input
             type="text"

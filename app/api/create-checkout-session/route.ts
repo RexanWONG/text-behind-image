@@ -17,7 +17,7 @@ export async function POST(req: Request, res: Response) {
                             recurring: {
                                 interval: 'month'
                             },
-                            unit_amount: 4 * 100,
+                            unit_amount: 9 * 100,
                         },
                         quantity: 1,
                     },

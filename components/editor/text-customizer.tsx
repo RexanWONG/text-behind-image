@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
+import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, ArrowLeftRight, ArrowUpDown, AlignHorizontalSpaceAround } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface TextCustomizerProps {
@@ -28,6 +28,7 @@ interface TextCustomizerProps {
         shadowSize: number;
         tiltX: number;
         tiltY: number;
+        letterSpacing: number;
     };
     handleAttributeChange: (id: number, attribute: string, value: any) => void;
     removeTextSet: (id: number) => void;
@@ -45,11 +46,13 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
         { id: 'position', icon: <Move size={20} />, label: 'Position' },
         { id: 'fontSize', icon: <Text size={20} />, label: 'Size' },
         { id: 'fontWeight', icon: <Bold size={20} />, label: 'Weight' },
+        { id: 'letterSpacing', icon: <AlignHorizontalSpaceAround size={20} />, label: 'Letter spacing' },
         { id: 'opacity', icon: <LightbulbIcon size={20} />, label: 'Opacity' },
         { id: 'rotation', icon: <RotateCw size={20} />, label: 'Rotate' },
         { id: 'tiltX', icon: <ArrowLeftRight size={20} />, label: 'Tilt X' },
         { id: 'tiltY', icon: <ArrowUpDown size={20} />, label: 'Tilt Y' },
-    ];
+        
+    ];  
 
     return (
         <AccordionItem value={`item-${textSet.id}`}>
@@ -149,6 +152,18 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
                         )}
+                        
+                        {activeControl === 'letterSpacing' && (
+                            <SliderField
+                                attribute="letterSpacing"
+                                label="Letter Spacing"
+                                min={-20}
+                                max={100}
+                                step={1}
+                                currentValue={textSet.letterSpacing}
+                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                            />
+                        )}
 
                         {activeControl === 'opacity' && (
                             <SliderField
@@ -197,6 +212,8 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
                         )}
+
+                        
                     </div>
                 </div>
 
@@ -208,13 +225,13 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         currentValue={textSet.text}
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
-                    <FontFamilyPicker
-                        attribute="fontFamily"
-                        currentFont={textSet.fontFamily}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                        userId={userId}
-                    />
-                    <div className='flex flex-row items-start justify-start gap-10 w-full'>
+                    <div className='flex flex-row items-center gap-12 w-full'>
+                        <FontFamilyPicker
+                            attribute="fontFamily"
+                            currentFont={textSet.fontFamily}
+                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                            userId={userId}
+                        />
                         <ColorPicker
                             attribute="color"
                             label="Text Color"
@@ -229,6 +246,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         max={200}
                         step={1}
                         currentValue={textSet.left}
+                        hasTopPadding={false}
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
                     <SliderField
@@ -256,6 +274,15 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         max={900}
                         step={100}
                         currentValue={textSet.fontWeight}
+                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                    />
+                    <SliderField
+                        attribute="letterSpacing"
+                        label="Letter Spacing"
+                        min={-20}
+                        max={100}
+                        step={1}
+                        currentValue={textSet.letterSpacing}
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
                     <SliderField
@@ -294,6 +321,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                         currentValue={textSet.tiltY}
                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                     />
+                    
                 </div>
 
                 <div className="flex flex-row gap-2 my-8">

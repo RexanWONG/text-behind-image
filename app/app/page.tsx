@@ -116,7 +116,8 @@ const Page = () => {
             shadowSize: 4,
             rotation: 0,
             tiltX: 0,
-            tiltY: 0
+            tiltY: 0,
+            letterSpacing: 0
         }]);
     };
 
@@ -159,6 +160,7 @@ const Page = () => {
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
+                ctx.letterSpacing = `${textSet.letterSpacing}px`;
     
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
@@ -183,8 +185,31 @@ const Page = () => {
                 // Apply rotation last
                 ctx.rotate((textSet.rotation * Math.PI) / 180);
     
-                // Draw text at transformed position
-                ctx.fillText(textSet.text, 0, 0);
+                if (textSet.letterSpacing === 0) {
+                    // Use standard text rendering if no letter spacing
+                    ctx.fillText(textSet.text, 0, 0);
+                } else {
+                    // Manual letter spacing implementation
+                    const chars = textSet.text.split('');
+                    let currentX = 0;
+                    // Calculate total width to center properly
+                    const totalWidth = chars.reduce((width, char, i) => {
+                        const charWidth = ctx.measureText(char).width;
+                        return width + charWidth + (i < chars.length - 1 ? textSet.letterSpacing : 0);
+                    }, 0);
+                    
+
+                
+                    // Start position (centered)
+                    currentX = -totalWidth / 2;
+                    
+                    // Draw each character with spacing
+                    chars.forEach((char, i) => {
+                        const charWidth = ctx.measureText(char).width;
+                        ctx.fillText(char, currentX + charWidth / 2, 0);
+                        currentX += charWidth + textSet.letterSpacing;
+                    });
+                }
                 ctx.restore();
             });
     
@@ -353,6 +378,7 @@ const Page = () => {
                                                 fontWeight: textSet.fontWeight,
                                                 fontFamily: textSet.fontFamily,
                                                 opacity: textSet.opacity,
+                                                letterSpacing: `${textSet.letterSpacing}px`,
                                                 transformStyle: 'preserve-3d'
                                             }}
                                         >
