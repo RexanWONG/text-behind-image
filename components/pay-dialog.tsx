@@ -177,6 +177,7 @@ const PayDialog: React.FC<PayDialogProps> = ({ userDetails, userEmail, isOpen, o
               "Unlimited generations / account", 
               "Access to all 250 fonts",
               "Letter spacing control",
+              "3D tilt effects (horizontal & vertical)",
               "No ads"
             ]}
           />

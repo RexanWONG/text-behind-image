@@ -71,12 +71,12 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
         { id: 'letterSpacing', icon: <AlignHorizontalSpaceAround size={20} />, label: 'Letter spacing', premium: true },
         { id: 'opacity', icon: <LightbulbIcon size={20} />, label: 'Opacity' },
         { id: 'rotation', icon: <RotateCw size={20} />, label: 'Rotate' },
-        { id: 'tiltX', icon: <ArrowLeftRight size={20} />, label: 'Tilt X' },
-        { id: 'tiltY', icon: <ArrowUpDown size={20} />, label: 'Tilt Y' },
+        { id: 'tiltX', icon: <ArrowLeftRight size={20} />, label: 'Tilt X (3D effect)', premium: true },
+        { id: 'tiltY', icon: <ArrowUpDown size={20} />, label: 'Tilt Y (3D effect)', premium: true },
     ];  
 
     const handlePremiumAttributeChange = (attribute: string, value: any) => {
-        if (isPaidUser || attribute !== 'letterSpacing') {
+        if (isPaidUser || (attribute !== 'letterSpacing' && attribute !== 'tiltX' && attribute !== 'tiltY')) {
             handleAttributeChange(textSet.id, attribute, value);
         }
     };
@@ -227,7 +227,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 max={45}
                                 step={1}
                                 currentValue={textSet.tiltX}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                                disabled={!isPaidUser}
+                                premiumFeature={!isPaidUser}
                             />
                         )}
 
@@ -239,7 +241,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 max={45}
                                 step={1}
                                 currentValue={textSet.tiltY}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                                disabled={!isPaidUser}
+                                premiumFeature={!isPaidUser}
                             />
                         )}
                     </div>
@@ -335,21 +339,25 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     />
                     <SliderField
                         attribute="tiltX"
-                        label="Horizontal Tilt"
+                        label="Horizontal Tilt (3D effect)"
                         min={-45}
                         max={45}
                         step={1}
                         currentValue={textSet.tiltX}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                        handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                        disabled={!isPaidUser}
+                        premiumFeature={!isPaidUser}
                     />
                     <SliderField
                         attribute="tiltY"
-                        label="Vertical Tilt"
+                        label="Vertical Tilt (3D effect)"
                         min={-45}
                         max={45}
                         step={1}
                         currentValue={textSet.tiltY}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                        handleAttributeChange={(attribute, value) => handlePremiumAttributeChange(attribute, value)}
+                        disabled={!isPaidUser}
+                        premiumFeature={!isPaidUser}
                     />
                 </div>
 
