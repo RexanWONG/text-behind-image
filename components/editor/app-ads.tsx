@@ -5,7 +5,7 @@ import { X } from 'lucide-react'
 import Image, { StaticImageData } from 'next/image'
 import formfactorImg from '@/public/ads/formfactor.jpg'
 import ninjatoolsImg from '../../public/ads/ninjatools_ad.png'
-
+import bulletpenImg from '../../public/ads/bulletpen.png'
 interface Ad {
     name: string;
     image: StaticImageData;
@@ -20,11 +20,17 @@ const ads: Ad[] = [
     //     description: "Websites that attract users | Discover how we transformed the Hypefury website — and let us do the same for you!",
     //     url: "https://www.formfactor.design/case-studies/hypefury"
     // },
+    // {
+    //     name: "NinjaTools",
+    //     image: ninjatoolsImg,
+    //     description: "Streamline your AI workflow | One interface for all your AI models, saving you $600 annually",
+    //     url: "https://ninjatools.ai/?ref=textbehindimage"
+    // },
     {
-        name: "NinjaTools",
-        image: ninjatoolsImg,
-        description: "Streamline your AI workflow | One interface for all your AI models, saving you $600 annually",
-        url: "https://ninjatools.ai/?ref=textbehindimage"
+        name: "Bulletpen",
+        image: bulletpenImg,
+        description: "Write great essays 10x faster and better - while you yap",
+        url: "https://bulletpen.ai/"
     }
 ]
 
