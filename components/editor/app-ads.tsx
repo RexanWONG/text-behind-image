@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import Image, { StaticImageData } from 'next/image'
-import formfactorImg from '@/public/ads/formfactor.jpg'
-import ninjatoolsImg from '../../public/ads/ninjatools_ad.png'
 import bulletpenImg from '../../public/ads/bulletpen.png'
+import osisImg from '../../public/ads/osis.png'
+
 interface Ad {
     name: string;
     image: StaticImageData;
@@ -14,23 +14,17 @@ interface Ad {
 }
 
 const ads: Ad[] = [
-    // {
-    //     name: "Formfactor",
-    //     image: formfactorImg,
-    //     description: "Websites that attract users | Discover how we transformed the Hypefury website — and let us do the same for you!",
-    //     url: "https://www.formfactor.design/case-studies/hypefury"
-    // },
-    // {
-    //     name: "NinjaTools",
-    //     image: ninjatoolsImg,
-    //     description: "Streamline your AI workflow | One interface for all your AI models, saving you $600 annually",
-    //     url: "https://ninjatools.ai/?ref=textbehindimage"
-    // },
     {
         name: "Bulletpen",
         image: bulletpenImg,
         description: "Write great essays 10x faster and better - while you yap",
         url: "https://bulletpen.ai/"
+    },
+    {
+        name: "Osis",
+        image: osisImg,
+        description: "Rocket your investing with AI",
+        url: "https://www.osis.co/?textbehindimage"
     }
 ]
 
@@ -43,7 +37,7 @@ const AppAds = () => {
             setCurrentAdIndex((prevIndex) => 
                 prevIndex === ads.length - 1 ? 0 : prevIndex + 1
             )
-        }, 5000)
+        }, 2000)
 
         return () => clearInterval(interval)
     }, [])
@@ -62,11 +56,12 @@ const AppAds = () => {
             <div className="flex flex-col md:flex-col gap-2">
                 <div className="md:hidden flex items-center justify-between p-4">
                     <div className="flex items-center gap-4 flex-1">
-                        <div className="relative w-12 h-12 flex-shrink-0">
+                        <div className="relative w-12 h-[6.75px] flex-shrink-0">
                             <Image
                                 src={currentAd.image}
                                 alt={currentAd.name}
-                                layout="fill"
+                                width={48}
+                                height={27}
                                 className="object-cover rounded-md"
                             />
                         </div>
