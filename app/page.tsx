@@ -51,7 +51,7 @@ const page = () => {
                     <img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=494264&theme=light&period=monthly&topic_id=44" alt="Text&#0032;Behind&#0032;Image - Create&#0032;stunning&#0032;text&#0045;behind&#0045;image&#0032;designs&#0032;easily | Product Hunt" width="250" height="54" />
                 </a>
             </div>
-
+            
             <div className='w-full h-full mt-2'>
                 <HeroImages />
                 <HeroParallaxImages />
@@ -59,7 +59,7 @@ const page = () => {
             <div className="flex flex-col items-center justify-center my-10">
                 <AdditionalInfo />
                 <div className='text-2xl mt-10'>
-                    2024 @ <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>rexanwong.xyz</Link> - All Rights Reserved - Created by Rexan Wong
+                    2025 @ <Link href={'https://www.rexanwong.xyz'} target="_blank" rel="noopener noreferrer" className='hover:font-bold'>rexanwong.xyz</Link> - All Rights Reserved - Created by Rexan Wong
                 </div> 
             </div>
         </div>
