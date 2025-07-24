@@ -18,7 +18,7 @@ export const HeroHighlight = ({
   function handleMouseMove({
     currentTarget,
     clientX,
-    clientY,
+    clientY, 
   }: React.MouseEvent<HTMLDivElement>) {
     if (!currentTarget) return;
     let { left, top } = currentTarget.getBoundingClientRect();

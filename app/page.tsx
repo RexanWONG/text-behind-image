@@ -31,7 +31,7 @@ const page = () => {
             </HeroHighlight>
             
             <div className="text-lg text-center font-semibold mb-4">
-                300,000+ text behind image designs created
+                400,000+ text behind image designs created
             </div>
 
             <Link href={'/app'} className='mb-10'>
